@@ -1,0 +1,13 @@
+:root { --primary: #0d6efd; --bg: #f0f2f5; --danger: #dc3545; }
+body { background-color: var(--bg); font-family: 'Segoe UI', sans-serif; }
+.auth-card { border-radius: 1.5rem; border: none; box-shadow: 0 1rem 3rem rgba(0,0,0,0.1); }
+.card { border-radius: 1rem; }
+.x-small { font-size: 0.7rem; font-weight: 700; color: #6c757d; text-transform: uppercase; }
+.table thead th { background-color: #f8f9fa; font-size: 0.75rem; }
+.info-badge-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 5px; }
+.badge-date { background: #fff; border: 1px solid #ced4da; padding: 3px 8px; border-radius: 5px; font-size: 0.72rem; }
+.bg-urgent { background-color: #fff5f5 !important; }
+.text-danger-blink { color: var(--danger); font-weight: 800; animation: blinker 1.5s linear infinite; }
+@keyframes blinker { 50% { opacity: 0.4; } }
+.car-thumb { width: 60px; height: 60px; object-fit: cover; border-radius: 8px; border: 1px solid #ddd; }
+#app-section.d-none { display: none !important; }

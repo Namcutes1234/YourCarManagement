@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>YourCarManagement - List</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<style>
+    .car-card {
+        border: none;
+        border-radius: 16px;
+        transition: all 0.3s ease;
+        background: #fff;
+    }
+    .car-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 24px rgba(0,0,0,0.1) !important;
+    }
+    .car-img-container {
+        position: relative;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+    .fuel-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        backdrop-filter: blur(4px);
+        background: rgba(255,255,255,0.8);
+        color: #333;
+        font-weight: bold;
+        padding: 4px 10px;
+        border-radius: 8px;
+        font-size: 0.75rem;
+    }
+    .info-label {
+        font-size: 0.7rem;
+        color: #888;
+        text-transform: uppercase;
+        font-weight: 700;
+        margin-bottom: 0;
+    }
+    .info-value {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #333;
+    }
+    .btn-action {
+        border-radius: 10px;
+        padding: 8px;
+    }
+    .btn-outline-primary:hover {
+        background-color: #0d6efd !important;
+        color: white !important;
+    }
+    .btn-outline-danger:hover {
+        background-color: #dc3545 !important;
+        color: white !important;
+    }
+    .card {
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1) !important;
+    }
+    .custom-nav-mini .nav-link {
+            font-size: 13px !important; 
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.85) !important;
+            transition: 0.2s;
+        }
+        .custom-nav-mini .nav-link:hover {
+            color: #fff !important;
+            transform: translateY(-1px);
+        }
+        .custom-nav-mini i {
+            font-size: 12px;
+            margin-right: 3px;
+        }
+        .btn-logout {
+            font-size: 11px !important;
+            padding: 2px 10px !important;
+            border-radius: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .navbar-brand {
+            font-size: 15px !important;
+        }
+        @media (max-width: 991px) {
+            .custom-nav-mini .nav-item {
+                width: 100%;
+                padding: 5px 0;
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+            }
+        }
+</style>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm py-1">
+        <div class="container">
+            <a class="navbar-brand fw-bold fs-6" href="home.html">
+                <i class="fas fa-car-side me-1"></i>YourCarManagement
+            </a>
+
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon" style="width: 1.1rem; height: 1.1rem;"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center custom-nav-mini">
+                    <li class="nav-item">
+                        <a class="nav-link px-2" href="home.html"><i class="fas fa-home"></i> Trang chủ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-2" href="list.html"><i class="fas fa-list"></i> Danh sách</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-2" href="editor.html"><i class="fas fa-edit"></i> Sửa xe</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-2 text-warning fw-bold" href="chatbot.html">
+                            <i class="fas fa-robot"></i> AI Chat
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-2" href="faq.html"><i class="fas fa-question-circle"></i> FAQ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-2" href="about.html"><i class="fas fa-info-circle"></i> Giới thiệu</a>
+                    </li>
+                    
+                    <li class="nav-item ms-lg-2">
+                        <button onclick="handleLogout()" class="btn btn-outline-light btn-logout mt-2 mt-lg-0">
+                            <i class="fas fa-sign-out-alt"></i> Thoát
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
+            <h4 class="fw-bold mb-3 mb-md-0 text-secondary">DANH SÁCH ĐỘI XE</h4>
+            
+            <div class="d-flex gap-2">
+                <div class="input-group shadow-sm rounded-pill overflow-hidden" style="max-width: 400px; border: 1px solid #eee;">
+                    <span class="input-group-text bg-white border-0 ps-3"><i class="fas fa-search text-muted"></i></span>
+                    <input type="text" id="searchInput" class="form-control border-0 py-2 ms-n2" placeholder="Tìm tên xe/biển số/hãng" onkeyup="renderListPage()">
+                </div>
+                <button onclick="handleExport()" class="btn btn-success btn-sm fw-bold px-3">Export list (.xlsx)</button>
+            </div>
+        </div>
+
+        <div id="car-list" class="row g-3"></div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="script.js"></script>
+    <script>window.onload = renderListPage;</script>
+    <footer class="bg-dark text-white py-5">
+        <div class="container text-center">
+            <div class="mb-3">
+                <i class="bi bi-facebook mx-2 fs-4"></i>
+                <i class="bi bi-twitter-x mx-2 fs-4"></i>
+                <i class="bi bi-github mx-2 fs-4"></i>
+            </div>
+            <p class="opacity-75 mb-0">&copy; 2026 YourCarManagement. Tất cả các quyền được bảo lưu.</p>
+            <br><br><br><br><br><br><br><br>
+        </div>
+    </footer>
+</body>
+</html>

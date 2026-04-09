@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+	<meta charset="UTF-8">
+	<title>YourCar - Editor Chi Tiết</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+	    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	<style>
+		.section-title { border-left: 5px solid #0d6efd; padding-left: 12px; margin: 25px 0 15px; font-weight: bold; color: #333; text-transform: uppercase; font-size: 0.9rem; }
+		.form-label { font-size: 0.8rem; font-weight: 700; color: #555; margin-bottom: 3px; }
+		.card-editor { border: none; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+		.custom-nav-mini .nav-link {
+            font-size: 13px !important; 
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.85) !important;
+            transition: 0.2s;
+        }
+        .custom-nav-mini .nav-link:hover {
+            color: #fff !important;
+            transform: translateY(-1px);
+        }
+        .custom-nav-mini i {
+            font-size: 12px;
+            margin-right: 3px;
+        }
+        .btn-logout {
+            font-size: 11px !important;
+            padding: 2px 10px !important;
+            border-radius: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .navbar-brand {
+            font-size: 15px !important;
+        }
+        @media (max-width: 991px) {
+            .custom-nav-mini .nav-item {
+                width: 100%;
+                padding: 5px 0;
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+            }
+        }
+	</style>
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm py-1">
+        <div class="container">
+            <a class="navbar-brand fw-bold fs-6" href="home.html">
+                <i class="fas fa-car-side me-1"></i>YourCarManagement
+            </a>
+
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon" style="width: 1.1rem; height: 1.1rem;"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center custom-nav-mini">
+                    <li class="nav-item">
+                        <a class="nav-link px-2" href="home.html"><i class="fas fa-home"></i> Trang chủ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-2" href="list.html"><i class="fas fa-list"></i> Danh sách</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-2" href="editor.html"><i class="fas fa-edit"></i> Sửa xe</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-2 text-warning fw-bold" href="chatbot.html">
+                            <i class="fas fa-robot"></i> AI Chat
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-2" href="faq.html"><i class="fas fa-question-circle"></i> FAQ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-2" href="about.html"><i class="fas fa-info-circle"></i> Giới thiệu</a>
+                    </li>
+                    
+                    <li class="nav-item ms-lg-2">
+                        <button onclick="handleLogout()" class="btn btn-outline-light btn-logout mt-2 mt-lg-0">
+                            <i class="fas fa-sign-out-alt"></i> Thoát
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+	<div class="container pb-5">
+		<div class="card card-editor p-4 mx-auto" style="max-width: 900px;">
+			<h4 id="editor-title" class="fw-bold text-primary mb-4 text-center">QUẢN LÝ HỒ SƠ XE</h4>
+			
+			<form id="car-form">
+				<input type="hidden" id="edit-id">
+				
+				<div class="row g-4">
+					<div class="col-md-4 text-center border-end">
+						<label class="form-label d-block text-start">Hình ảnh đại diện</label>
+						<img src="https://via.placeholder.com/300x200?text=No+Image" id="img-target" class="img-thumbnail mb-3 w-100" style="height:200px; object-fit:cover; border-radius:15px;">
+						<input type="file" id="carImage" class="form-control form-control-sm" accept="image/*">
+						<p class="text-muted small mt-2 italic">* Nên dùng ảnh dưới 1MB</p>
+					</div>
+					
+					<div class="col-md-8">
+						<div class="section-title mt-0">Thông tin xe cơ bản</div>
+						<div class="row g-2">
+							<div class="col-6"><label class="form-label">Hãng xe</label><input type="text" id="brand" class="form-control" required></div>
+							<div class="col-6"><label class="form-label">Tên xe</label><input type="text" id="name" class="form-control" required></div>
+							<div class="col-6"><label class="form-label">Biển số</label><input type="text" id="plate" class="form-control" placeholder="30A-123.45" required></div>
+							<div class="col-6"><label class="form-label">Nhiên liệu</label><select id="fuel" class="form-select"><option>Xăng</option><option>Dầu</option><option>Điện</option></select></div>
+							<div class="col-12"><label class="form-label">Số KM hiện tại</label><input type="number" id="km" class="form-control" placeholder="Ví dụ: 55000"></div>
+						</div>
+
+						<div class="section-title">Thông tin người lái xe (Tài xế)</div>
+						<div class="row g-2">
+							<div class="col-7"><label class="form-label">Họ tên tài xế</label><input type="text" id="driver_name" class="form-control" placeholder="Tên người lái"></div>
+							<div class="col-5"><label class="form-label">Hạng bằng</label><select id="driver_rank" class="form-select"><option>B1</option><option>B2</option><option>C</option><option>D</option><option>E</option><option>F</option><option>FC</option></select></div>
+							<div class="col-12"><label class="form-label">Số điện thoại</label><input type="tel" id="driver_phone" class="form-control" placeholder="09xxxxxxxx"></div>
+						</div>
+					</div>
+				</div>
+
+				<div class="section-title">Lịch bảo trì & Giấy tờ (10 Mục)</div>
+				<div class="row g-3">
+					<div class="col-md-4"><label class="form-label text-danger">Hạn Đăng kiểm</label><input type="date" id="d_reg" class="form-control"></div>
+					<div class="col-md-4"><label class="form-label text-danger">Hạn Bảo hiểm</label><input type="date" id="d_ins" class="form-control"></div>
+					<div class="col-md-4"><label class="form-label">Phí đường bộ</label><input type="date" id="d_road" class="form-control"></div>
+					<div class="col-md-4"><label class="form-label">Hạn Thay dầu</label><input type="date" id="d_oil" class="form-control"></div>
+					<div class="col-md-4"><label class="form-label">Hạn Lọc gió/nhớt</label><input type="date" id="d_filter" class="form-control"></div>
+					<div class="col-md-4"><label class="form-label">Hạn Đảo lốp</label><input type="date" id="d_tire" class="form-control"></div>
+					<div class="col-md-4"><label class="form-label">Bảo dưỡng phanh</label><input type="date" id="d_brake" class="form-control"></div>
+					<div class="col-md-4"><label class="form-label">Vệ sinh máy lạnh</label><input type="date" id="d_ac" class="form-control"></div>
+					<div class="col-md-4"><label class="form-label text-primary">Hạn Bằng lái</label><input type="date" id="d_lic" class="form-control"></div>
+					<div class="col-md-12"><label class="form-label">Ghi chú thêm</label><textarea id="tasks" class="form-control" rows="2"></textarea></div>
+				</div>
+
+				<div class="mt-4 pt-4 border-top d-flex gap-2">
+					<button type="submit" class="btn btn-primary px-5 fw-bold shadow-sm">LƯU DỮ LIỆU</button>
+					<a href="list.html" class="btn btn-light px-4 border">Hủy bỏ</a>
+				</div>
+			</form>
+		</div>
+	</div>
+	<script src="script.js"></script>
+	<script>window.onload = initEditorPage;</script>
+    <footer class="bg-dark text-white py-5">
+        <div class="container text-center">
+            <div class="mb-3">
+                <i class="bi bi-facebook mx-2 fs-4"></i>
+                <i class="bi bi-twitter-x mx-2 fs-4"></i>
+                <i class="bi bi-github mx-2 fs-4"></i>
+            </div>
+            <p class="opacity-75 mb-0">&copy; 2026 YourCarManagement. Tất cả các quyền được bảo lưu.</p>
+        </div>
+    </footer>
+</body>
+</html>
