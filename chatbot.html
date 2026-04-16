@@ -2,173 +2,205 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YourCarManagement - Chatbot</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body { background-color: #f0f2f5; height: 100vh; display: flex; flex-direction: column; }
-        .navbar { background: #0d6efd; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .chat-container {
-            flex: 1;
-            max-width: 900px;
-            margin: 20px auto;
-            background: white;
-            border-radius: 20px;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-        }
-        #chat-content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
-        }
-        .msg-wrapper { margin-bottom: 20px; display: flex; flex-direction: column; }
-        .user-msg {
-            align-self: flex-end;
-            background: #0d6efd;
-            color: white;
-            padding: 12px 18px;
-            border-radius: 20px 20px 0 20px;
-            max-width: 75%;
-            box-shadow: 0 4px 10px rgba(13, 110, 253, 0.2);
-        }
-        .bot-msg {
-            align-self: flex-start;
-            background: white;
-            color: #333;
-            padding: 12px 18px;
-            border-radius: 20px 20px 20px 0;
-            max-width: 75%;
-            border: 1px solid #eee;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
-        }
-        .chat-footer { background: white; padding: 20px; border-top: 1px solid #eee; }
-        .input-group { background: #f0f2f5; border-radius: 30px; padding: 5px 15px; }
-        .input-group input { background: transparent; border: none; padding: 10px; }
-        .input-group input:focus { box-shadow: none; }
-        .btn-send { 
-            background: #0d6efd; color: white; border-radius: 50%; 
-            width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;
-            transition: 0.3s;
-        }
-        .btn-send:hover { transform: scale(1.1); background: #0056b3; }
-        .typing { font-style: italic; font-size: 0.8rem; color: #888; margin-bottom: 10px; }
-        .custom-nav-mini .nav-link {
-            font-size: 13px !important; 
-            font-weight: 500;
-            color: rgba(255, 255, 255, 0.85) !important;
-            transition: 0.2s;
-        }
-        .custom-nav-mini .nav-link:hover {
-            color: #fff !important;
-            transform: translateY(-1px);
-        }
-        .custom-nav-mini i {
-            font-size: 12px;
-            margin-right: 3px;
-        }
-        .btn-logout {
-            font-size: 11px !important;
-            padding: 2px 10px !important;
-            border-radius: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .navbar-brand {
-            font-size: 15px !important;
-        }
-        @media (max-width: 991px) {
-            .custom-nav-mini .nav-item {
-                width: 100%;
-                padding: 5px 0;
-                border-bottom: 1px solid rgba(255,255,255,0.1);
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+    /* Tổng thể trang */
+    body { 
+        background-color: #f0f2f5; 
+        display: flex; 
+        flex-direction: column; 
+        min-height: 100vh; 
+        font-family: 'Inter', sans-serif; 
+    }
+    .content-wrapper { flex: 1 0 auto; padding: 20px 0; }
+
+    /* Khung Chat */
+    .chat-card {
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        overflow: hidden;
+        background: #fff;
+    }
+
+    /* Vùng nội dung chat */
+    #chat-content { 
+        height: 450px; 
+        overflow-y: auto; 
+        background: #ffffff; 
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    /* Tùy chỉnh thanh cuộn */
+    #chat-content::-webkit-scrollbar { width: 5px; }
+    #chat-content::-webkit-scrollbar-thumb { background: #e0e0e0; border-radius: 10px; }
+
+    /* Bong bóng tin nhắn Người dùng */
+    .user-msg-wrapper { align-self: flex-end; max-width: 80%; }
+    .user-msg { 
+        background: #0d6efd; 
+        color: white; 
+        border-radius: 18px 18px 2px 18px; 
+        padding: 10px 16px; 
+        font-size: 13.5px;
+        line-height: 1.5;
+        box-shadow: 0 4px 10px rgba(13, 110, 253, 0.2);
+    }
+
+    /* Bong bóng tin nhắn AI (Bot) */
+    .bot-msg-wrapper { align-self: flex-start; max-width: 85%; }
+    .bot-msg { 
+        background: #f1f3f4; 
+        color: #3c4043; 
+        border-radius: 18px 18px 18px 2px; 
+        padding: 12px 18px; 
+        font-size: 13.5px;
+        line-height: 1.6;
+        border: 1px solid #e8eaed;
+    }
+
+    /* Label tên AI */
+    .bot-name {
+        font-size: 11px;
+        font-weight: 700;
+        color: #0d6efd;
+        text-transform: uppercase;
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+    }
+
+    /* Thanh nhập liệu */
+    .chat-input-area { padding: 15px 20px; background: #fff; }
+    .input-group { 
+        background: #f8f9fa; 
+        border-radius: 30px; 
+        padding: 5px 10px 5px 20px;
+        border: 1px solid #eee;
+    }
+    #chat-input { 
+        border: none; 
+        background: transparent; 
+        box-shadow: none; 
+        font-size: 14px;
+        padding: 10px 0;
+    }
+    #chat-input:focus { outline: none; }
+    
+    .btn-send { 
+        background: #0d6efd; 
+        color: white; 
+        border-radius: 50% !important; 
+        width: 40px; 
+        height: 40px; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center;
+        transition: 0.3s;
+        border: none;
+    }
+    .btn-send:hover { transform: scale(1.1); background: #0056b3; }
+
+    /* Navbar & Footer Small Text */
+    .nav-link { font-size: 14px !important; }
+    footer { font-size: 11px; flex-shrink: 0; color: #6c757d; }
+</style>
 </head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm py-1">
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
         <div class="container">
-            <a class="navbar-brand fw-bold fs-6" href="home.html">
-                <i class="fas fa-car-side me-1"></i>YourCarManagement
+            <a class="navbar-brand fw-bold" href="home.html">
+                <i class="fas fa-car-side me-2"></i>YourCarManagement
             </a>
 
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon" style="width: 1.1rem; height: 1.1rem;"></span>
+                <span class="navbar-toggler-icon" style="width: 1.2rem; height: 1.2rem;"></span>
             </button>
 
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto align-items-center custom-nav-mini">
+                <ul class="navbar-nav ms-auto align-items-center custom-nav">
                     <li class="nav-item">
-                        <a class="nav-link px-2" href="home.html"><i class="fas fa-home"></i> Trang chủ</a>
+                        <a class="nav-link px-3" href="home.html"><i class="fas fa-home me-1"></i>Trang chủ</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link px-2" href="list.html"><i class="fas fa-list"></i> Danh sách</a>
+                        <a class="nav-link px-3" href="list.html"><i class="fas fa-list me-1"></i>Danh sách xe</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link px-2" href="editor.html"><i class="fas fa-edit"></i> Sửa xe</a>
+                        <a class="nav-link px-3" href="editor.html"><i class="fas fa-tools me-1"></i>Sửa thông tin</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link px-2 text-warning fw-bold" href="chatbot.html">
-                            <i class="fas fa-robot"></i> AI Chat
+                        <a class="nav-link px-3" href="chatbot.html">
+                            <i class="fas fa-robot me-1"></i>AI Chat
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link px-2" href="faq.html"><i class="fas fa-question-circle"></i> FAQ</a>
+                        <a class="nav-link px-3" href="faq.html"><i class="fas fa-question-circle me-1"></i>FAQ</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link px-2" href="about.html"><i class="fas fa-info-circle"></i> Giới thiệu</a>
+                        <a class="nav-link px-3" href="about.html"><i class="fas fa-info-circle me-1"></i>Giới thiệu</a>
                     </li>
                     
-                    <li class="nav-item ms-lg-2">
-                        <button onclick="handleLogout()" class="btn btn-outline-light btn-logout mt-2 mt-lg-0">
-                            <i class="fas fa-sign-out-alt"></i> Thoát
+                    <li class="nav-item ms-lg-3">
+                        <button onclick="handleLogout()" class="btn btn-outline-light btn-sm px-3 mt-2 mt-lg-0" style="border-radius: 20px; font-size: 13px;">
+                            <i class="fas fa-sign-out-alt me-1"></i>Thoát
                         </button>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
-    <div class="container-fluid flex-grow-1 d-flex">
-        <div class="chat-container w-100">
-            <div id="chat-content">
-                <div class="msg-wrapper">
-                    <div class="bot-msg">
-                        <small class="fw-bold text-primary d-block mb-1">YourCarManagement AI</small>
-                        Chào bạn! Mình là chuyên gia tư vấn kỹ thuật xe. Bạn muốn kiểm tra hạng mục nào hay cần tư vấn về luật giao thông không?
+    <div class="content-wrapper container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-white fw-bold"><i class="fas fa-robot text-primary me-2"></i>YourCarManagement AI</div>
+                    <div class="card-body">
+                        <div id="chat-content" class="mb-3"></div>
+                        <div class="input-group">
+                            <input type="text" id="chat-input" class="form-control" placeholder="Hỏi về bảo trì, thông số xe...">
+                            <button onclick="sendMessage()" class="btn btn-primary"><i class="fas fa-paper-plane"></i></button>
+                        </div>
                     </div>
-                </div>
-            </div>
-
-            <div id="typing-indicator" class="px-4 d-none">
-                <p class="typing">AI đang soạn câu trả lời...</p>
-            </div>
-
-            <div class="chat-footer">
-                <div class="input-group">
-                    <input type="text" id="chat-input" class="form-control" placeholder="Hỏi về thay dầu, đăng kiểm, lốp xe...">
-                    <button class="btn btn-send" onclick="sendMessage()">
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
                 </div>
             </div>
         </div>
     </div>
-    <script src="chatbot.js"></script>
-    <footer class="bg-dark text-white py-5">
-        <div class="container text-center">
-            <div class="mb-3">
-                <i class="bi bi-facebook mx-2 fs-4"></i>
-                <i class="bi bi-twitter-x mx-2 fs-4"></i>
-                <i class="bi bi-github mx-2 fs-4"></i>
-            </div>
-            <p class="opacity-75 mb-0">&copy; 2026 YourCarManagement. Tất cả các quyền được bảo lưu.</p>
+    <footer class="bg-white border-top py-3 text-center mt-auto">
+        <div class="container">
+            <p class="mb-0">© 2026 <strong>YourCarManagement</strong>. Toàn bộ dữ liệu được đồng bộ Cloud.</p>
         </div>
     </footer>
+    <script src="script.js"></script>
+    <script>
+        const user = checkAuth();
+        const GEMINI_KEY = "AIzaSyDsQRlsNhc6tbmrzGsEBS18Pijox--6PEY";
+        async function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const content = document.getElementById('chat-content');
+            const txt = input.value.trim();
+            if(!txt) return;
+            content.innerHTML += `<div class="text-end mb-3"><div class="user-msg">${txt}</div></div>`;
+            input.value = "";
+            const res = await fetch(getUrl(`users/${user}/cars`));
+            const cars = await res.json();
+            const carCtx = cars ? JSON.stringify(cars) : "Chưa có xe";
+            try {
+                const aiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite-preview:generateContent?key=${GEMINI_KEY}`, {
+                    method: "POST",
+                    body: JSON.stringify({ contents: [{ parts: [{ text: `Bạn là trợ lý YourCarManagement. ${user} đang hỏi. Dữ liệu xe: ${carCtx}. Câu hỏi: ${txt}` }] }] })
+                });
+                const data = await aiRes.json();
+                const reply = data.candidates[0].content.parts[0].text;
+                content.innerHTML += `<div class="text-start mb-3"><div class="bot-msg"><b>AI:</b><br>${reply.replace(/\n/g, '<br>')}</div></div>`;
+            } catch(e) { alert("Hết lượt dùng hoặc lỗi Key!"); }
+            content.scrollTop = content.scrollHeight;
+        }
+    </script>
 </body>
 </html>
