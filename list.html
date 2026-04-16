@@ -2,42 +2,117 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>YourCarManagement - List</title>
+    <title>YourCarManagement - Chatbot</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        .navbar {
-            padding: 0.8rem 0 !important;
-        }
-        .navbar-brand {
-            font-size: 1.2rem !important;
-            letter-spacing: 0.5px;
-        }
-        .custom-nav .nav-link {
-            font-size: 14px !important; 
-            font-weight: 500;
-            color: rgba(255, 255, 255, 0.9) !important;
-            transition: all 0.3s ease;
-        }
-        .custom-nav .nav-link:hover {
-            color: #ffc107 !important;
-            transform: translateY(-1px);
-        }
-        .custom-nav i {
-            font-size: 13px;
-        }
-        @media (max-width: 991px) {
-            .custom-nav {
-                padding: 1rem 0;
-            }
-            .custom-nav .nav-item {
-                width: 100%;
-                border-bottom: 1px solid rgba(255,255,255,0.1);
-            }
-        }
+<style>
+    /* Tổng thể trang */
+    body { 
+        background-color: #f0f2f5; 
+        display: flex; 
+        flex-direction: column; 
+        min-height: 100vh; 
+        font-family: 'Inter', sans-serif; 
+    }
+    .content-wrapper { flex: 1 0 auto; padding: 20px 0; }
+
+    /* Khung Chat */
+    .chat-card {
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        overflow: hidden;
+        background: #fff;
+    }
+
+    /* Vùng nội dung chat */
+    #chat-content { 
+        height: 450px; 
+        overflow-y: auto; 
+        background: #ffffff; 
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    /* Tùy chỉnh thanh cuộn */
+    #chat-content::-webkit-scrollbar { width: 5px; }
+    #chat-content::-webkit-scrollbar-thumb { background: #e0e0e0; border-radius: 10px; }
+
+    /* Bong bóng tin nhắn Người dùng */
+    .user-msg-wrapper { align-self: flex-end; max-width: 80%; }
+    .user-msg { 
+        background: #0d6efd; 
+        color: white; 
+        border-radius: 18px 18px 2px 18px; 
+        padding: 10px 16px; 
+        font-size: 13.5px;
+        line-height: 1.5;
+        box-shadow: 0 4px 10px rgba(13, 110, 253, 0.2);
+    }
+
+    /* Bong bóng tin nhắn AI (Bot) */
+    .bot-msg-wrapper { align-self: flex-start; max-width: 85%; }
+    .bot-msg { 
+        background: #f1f3f4; 
+        color: #3c4043; 
+        border-radius: 18px 18px 18px 2px; 
+        padding: 12px 18px; 
+        font-size: 13.5px;
+        line-height: 1.6;
+        border: 1px solid #e8eaed;
+    }
+
+    /* Label tên AI */
+    .bot-name {
+        font-size: 11px;
+        font-weight: 700;
+        color: #0d6efd;
+        text-transform: uppercase;
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+    }
+
+    /* Thanh nhập liệu */
+    .chat-input-area { padding: 15px 20px; background: #fff; }
+    .input-group { 
+        background: #f8f9fa; 
+        border-radius: 30px; 
+        padding: 5px 10px 5px 20px;
+        border: 1px solid #eee;
+    }
+    #chat-input { 
+        border: none; 
+        background: transparent; 
+        box-shadow: none; 
+        font-size: 14px;
+        padding: 10px 0;
+    }
+    #chat-input:focus { outline: none; }
+    
+    .btn-send { 
+        background: #0d6efd; 
+        color: white; 
+        border-radius: 50% !important; 
+        width: 40px; 
+        height: 40px; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center;
+        transition: 0.3s;
+        border: none;
+    }
+    .btn-send:hover { transform: scale(1.1); background: #0056b3; }
+
+    /* Navbar & Footer Small Text */
+    .nav-link { font-size: 14px !important; }
+    footer { font-size: 11px; flex-shrink: 0; color: #6c757d; }
 </style>
 </head>
-<body onload="loadCars()">
+<body class="bg-light">
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
         <div class="container">
             <a class="navbar-brand fw-bold" href="home.html">
@@ -81,26 +156,17 @@
         </div>
     </nav>
     <div class="content-wrapper container mt-4">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h4><i class="fas fa-list-ul me-2 text-primary"></i>Danh sách xe của tôi</h4>
-            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addModal">+ Thêm xe mới</button>
-        </div>
-
-        <div id="car-list" class="row">
-            </div>
-    </div>
-    <div class="modal fade" id="addModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header"><h5 class="modal-title">Thêm xe mới</h5></div>
-                <div class="modal-body">
-                    <input type="text" id="b" class="form-control mb-2" placeholder="Hãng xe (Vd: Honda)">
-                    <input type="text" id="n" class="form-control mb-2" placeholder="Tên xe (Vd: SH)">
-                    <input type="text" id="p" class="form-control mb-2" placeholder="Biển số">
-                    <input type="number" id="k" class="form-control mb-2" placeholder="Số KM (ODO)">
-                </div>
-                <div class="modal-footer">
-                    <button onclick="addCar()" class="btn btn-primary w-100">Đồng bộ lên Cloud</button>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-white fw-bold"><i class="fas fa-robot text-primary me-2"></i>YourCarManagement AI</div>
+                    <div class="card-body">
+                        <div id="chat-content" class="mb-3"></div>
+                        <div class="input-group">
+                            <input type="text" id="chat-input" class="form-control" placeholder="Hỏi về bảo trì, thông số xe...">
+                            <button onclick="sendMessage()" class="btn btn-primary"><i class="fas fa-paper-plane"></i></button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -111,40 +177,29 @@
         </div>
     </footer>
     <script src="script.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const user = checkAuth();
-        async function addCar() {
-            const car = { brand: document.getElementById('b').value, name: document.getElementById('n').value, plate: document.getElementById('p').value, km: document.getElementById('k').value };
-            await fetch(getUrl(`users/${user}/cars`), { method: 'POST', body: JSON.stringify(car) });
-            location.reload();
-        }
-        async function loadCars() {
+        const GEMINI_KEY = "AIzaSyDsQRlsNhc6tbmrzGsEBS18Pijox--6PEY";
+        async function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const content = document.getElementById('chat-content');
+            const txt = input.value.trim();
+            if(!txt) return;
+            content.innerHTML += `<div class="text-end mb-3"><div class="user-msg">${txt}</div></div>`;
+            input.value = "";
             const res = await fetch(getUrl(`users/${user}/cars`));
-            const data = await res.json();
-            const list = document.getElementById('car-list');
-            if(!data) return list.innerHTML = "<p class='text-center text-muted'>Empty...</p>";
-            Object.entries(data).forEach(([id, c]) => {
-                list.innerHTML += `
-                    <div class="col-md-4 mb-3">
-                        <div class="card shadow-sm border-0">
-                            <div class="card-body">
-                                <h6 class="fw-bold text-primary">${c.brand} ${c.name}</h6>
-                                <p class="small mb-1">Biển: ${c.plate} | KM: ${c.km}</p>
-                                <div class="d-flex gap-2">
-                                    <button class="btn btn-sm btn-outline-danger py-0" onclick="del('${id}')">Xóa</button>
-                                    <a href="editor.html?id=${id}" class="btn btn-sm btn-outline-warning py-0">Sửa</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>`;
-            });
-        }
-        async function del(id) {
-            if(confirm("Xóa?")) {
-                await fetch(getUrl(`users/${user}/cars/${id}`), { method: 'DELETE' });
-                location.reload();
-            }
+            const cars = await res.json();
+            const carCtx = cars ? JSON.stringify(cars) : "Chưa có xe";
+            try {
+                const aiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite-preview:generateContent?key=${GEMINI_KEY}`, {
+                    method: "POST",
+                    body: JSON.stringify({ contents: [{ parts: [{ text: `Bạn là trợ lý YourCarManagement. ${user} đang hỏi. Dữ liệu xe: ${carCtx}. Câu hỏi: ${txt}` }] }] })
+                });
+                const data = await aiRes.json();
+                const reply = data.candidates[0].content.parts[0].text;
+                content.innerHTML += `<div class="text-start mb-3"><div class="bot-msg"><b>AI:</b><br>${reply.replace(/\n/g, '<br>')}</div></div>`;
+            } catch(e) { alert("Hết lượt dùng hoặc lỗi Key!"); }
+            content.scrollTop = content.scrollHeight;
         }
     </script>
 </body>
