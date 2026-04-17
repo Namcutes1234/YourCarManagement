@@ -10,22 +10,17 @@
         .navbar {
             padding: 0.8rem 0 !important;
         }
-        .navbar-brand {
-            font-size: 1.2rem !important;
-            letter-spacing: 0.5px;
+        .custom-nav .nav-link:hover {
+            color: #ffc107 !important;
+            transform: translateY(-1px);
         }
-        .custom-nav .nav-link {
-            font-size: 14px !important; 
-            font-weight: 500;
-            color: rgba(255, 255, 255, 0.9) !important;
-            transition: all 0.3s ease;
-        }
+        .navbar-brand { font-size: 1.2rem !important; }
         .custom-nav .nav-link:hover {
             color: #ffc107 !important;
             transform: translateY(-1px);
         }
         .custom-nav i {
-            font-size: 13px;
+            font-size: 12px;
         }
         @media (max-width: 991px) {
             .custom-nav {
@@ -61,7 +56,7 @@
                         <a class="nav-link px-3" href="editor.html"><i class="fas fa-tools me-1"></i>Sửa thông tin</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link px-3 text-warning fw-bold" href="chatbot.html">
+                        <a class="nav-link px-3" href="chatbot.html">
                             <i class="fas fa-robot me-1"></i>AI Chat
                         </a>
                     </li>
@@ -70,12 +65,6 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link px-3" href="about.html"><i class="fas fa-info-circle me-1"></i>Giới thiệu</a>
-                    </li>
-                    
-                    <li class="nav-item ms-lg-3">
-                        <button onclick="handleLogout()" class="btn btn-outline-light btn-sm px-3 mt-2 mt-lg-0" style="border-radius: 20px; font-size: 13px;">
-                            <i class="fas fa-sign-out-alt me-1"></i>Thoát
-                        </button>
                     </li>
                 </ul>
             </div>
@@ -107,7 +96,9 @@
             <div class="col-md-6">
                 <div class="card dev-card shadow-sm p-4">
                     <h4 class="fw-bold text-primary"><i class="fas fa-code me-2"></i>Người phát triển</h4>
-                    <p class="text-muted">Dự án được thực hiện bởi đội ngũ <b>YourCarManagement Team</b>.</p>
+                    <p class="text-muted">Dự án được thực hiện bởi <b>Phạm Hải Nam</b>.</p>
+                    <p class="text-muted">Lớp 7C6 - Trường THCS Ngô Quyền, Hải Phòng</p>
+                    <p class="text-muted">Địa chỉ: Đường Đà Nẵng, phường Đồng Hải, Hải Phòng</p>
                 </div>
                 <div class="card dev-card shadow-sm p-4">
                     <h4 class="fw-bold text-primary"><i class="fas fa-info-circle"></i> Thông tin liên hệ</h4>
