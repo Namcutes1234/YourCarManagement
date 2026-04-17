@@ -1,44 +1,34 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-	<meta charset="UTF-8">
-	<title>YourCarManagement - Editor Chi Tiết</title>
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-	    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-	<style>
-		        .navbar {
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý hồ sơ xe - YourCarManagement</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .navbar {
             padding: 0.8rem 0 !important;
-        }
-        .navbar-brand {
-            font-size: 1.2rem !important;
-            letter-spacing: 0.5px;
-        }
-        .custom-nav .nav-link {
-            font-size: 14px !important; 
-            font-weight: 500;
-            color: rgba(255, 255, 255, 0.9) !important;
-            transition: all 0.3s ease;
         }
         .custom-nav .nav-link:hover {
             color: #ffc107 !important;
             transform: translateY(-1px);
         }
-        .custom-nav i {
-            font-size: 13px;
-        }
-        @media (max-width: 991px) {
-            .custom-nav {
-                padding: 1rem 0;
-            }
-            .custom-nav .nav-item {
-                width: 100%;
-                border-bottom: 1px solid rgba(255,255,255,0.1);
-            }
-        }
-	</style>
+        body { background-color: #fff; font-family: 'Segoe UI', sans-serif; color: #333; }
+        .main-title { color: #0d6efd; font-weight: 700; text-align: center; margin-top: 20px; text-transform: uppercase; }
+        .section-label { font-size: 14px; color: #666; margin-bottom: 8px; font-weight: 500; }
+        .form-label { font-size: 14px; margin-bottom: 5px; }
+        .form-control, .form-select { border-radius: 6px; border: 1px solid #dee2e6; padding: 8px 12px; font-size: 14px; }
+        .img-preview { width: 100%; height: 280px; border: 1px solid #ddd; border-radius: 10px; object-fit: cover; background: #f9f9f9; }
+        .red-label { color: #dc3545 !important; font-weight: 500; }
+        .blue-label { color: #0d6efd !important; font-weight: 500; }
+        .btn-save { background-color: #0d6efd; border: none; padding: 10px 40px; border-radius: 6px; font-weight: 600; transition: 0.3s; }
+        .btn-save:hover { background-color: #0056b3; transform: translateY(-1px); }
+        .btn-cancel { background-color: #f8f9fa; border: 1px solid #ddd; padding: 10px 30px; border-radius: 6px; text-decoration: none; color: #333; }
+        .nav-link { font-size: 14px !important; }
+    </style>
 </head>
-<body class="bg-light">
+<body onload="fetchCarDetail()">
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
         <div class="container">
             <a class="navbar-brand fw-bold" href="home.html">
@@ -81,67 +71,206 @@
             </div>
         </div>
     </nav>
-	<div class="container pb-5">
-		<div class="card card-editor p-4 mx-auto" style="max-width: 900px;">
-			<h4 id="editor-title" class="fw-bold text-primary mb-4 text-center">QUẢN LÝ HỒ SƠ XE</h4>
-			
-			<form id="car-form">
-				<input type="hidden" id="edit-id">
-				
-				<div class="row g-4">
-					<div class="col-md-4 text-center border-end">
-						<label class="form-label d-block text-start">Hình ảnh đại diện</label>
-						<img src="https://via.placeholder.com/300x200?text=No+Image" id="img-target" class="img-thumbnail mb-3 w-100" style="height:200px; object-fit:cover; border-radius:15px;">
-						<input type="file" id="carImage" class="form-control form-control-sm" accept="image/*">
-						<p class="text-muted small mt-2 italic">* Nên dùng ảnh dưới 1MB</p>
-					</div>
-					
-					<div class="col-md-8">
-						<div class="section-title mt-0">Thông tin xe cơ bản</div>
-						<div class="row g-2">
-							<div class="col-6"><label class="form-label">Hãng xe</label><input type="text" id="brand" class="form-control" required></div>
-							<div class="col-6"><label class="form-label">Tên xe</label><input type="text" id="name" class="form-control" required></div>
-							<div class="col-6"><label class="form-label">Biển số</label><input type="text" id="plate" class="form-control" placeholder="30A-123.45" required></div>
-							<div class="col-6"><label class="form-label">Nhiên liệu</label><select id="fuel" class="form-select"><option>Xăng</option><option>Dầu</option><option>Điện</option></select></div>
-							<div class="col-12"><label class="form-label">Số KM hiện tại</label><input type="number" id="km" class="form-control" placeholder="Ví dụ: 55000"></div>
-						</div>
+    <div class="container">
+        <h3 class="main-title mb-4">QUẢN LÝ HỒ SƠ XE</h3>
 
-						<div class="section-title">Thông tin người lái xe (Tài xế)</div>
-						<div class="row g-2">
-							<div class="col-7"><label class="form-label">Họ tên tài xế</label><input type="text" id="driver_name" class="form-control" placeholder="Tên người lái"></div>
-							<div class="col-5"><label class="form-label">Hạng bằng</label><select id="driver_rank" class="form-select"><option>B1</option><option>B2</option><option>C</option><option>D</option><option>E</option><option>F</option><option>FC</option></select></div>
-							<div class="col-12"><label class="form-label">Số điện thoại</label><input type="tel" id="driver_phone" class="form-control" placeholder="09xxxxxxxx"></div>
-						</div>
-					</div>
-				</div>
+        <form id="edit-form">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <p class="section-label">Hình ảnh đại diện</p>
+                    <img id="preview" src="https://via.placeholder.com/400x300?text=No+Image" class="img-preview mb-3" alt="Car Image">
+                    <input type="file" id="e-img" class="form-control mb-2" accept="image/*" onchange="previewImg(this)">
+                    <p class="text-muted" style="font-size: 11px;">* Nên dùng ảnh dưới 1MB để đảm bảo tốc độ đồng bộ.</p>
+                </div>
 
-				<div class="section-title">Lịch bảo trì & Giấy tờ (10 Mục)</div>
-				<div class="row g-3">
-					<div class="col-md-4"><label class="form-label text-danger">Hạn Đăng kiểm</label><input type="date" id="d_reg" class="form-control"></div>
-					<div class="col-md-4"><label class="form-label text-danger">Hạn Bảo hiểm</label><input type="date" id="d_ins" class="form-control"></div>
-					<div class="col-md-4"><label class="form-label">Phí đường bộ</label><input type="date" id="d_road" class="form-control"></div>
-					<div class="col-md-4"><label class="form-label">Hạn Thay dầu</label><input type="date" id="d_oil" class="form-control"></div>
-					<div class="col-md-4"><label class="form-label">Hạn Lọc gió/nhớt</label><input type="date" id="d_filter" class="form-control"></div>
-					<div class="col-md-4"><label class="form-label">Hạn Đảo lốp</label><input type="date" id="d_tire" class="form-control"></div>
-					<div class="col-md-4"><label class="form-label">Bảo dưỡng phanh</label><input type="date" id="d_brake" class="form-control"></div>
-					<div class="col-md-4"><label class="form-label">Vệ sinh máy lạnh</label><input type="date" id="d_ac" class="form-control"></div>
-					<div class="col-md-4"><label class="form-label text-primary">Hạn Bằng lái</label><input type="date" id="d_lic" class="form-control"></div>
-					<div class="col-md-12"><label class="form-label">Ghi chú thêm</label><textarea id="tasks" class="form-control" rows="2"></textarea></div>
-				</div>
+                <div class="col-md-8">
+                    <p class="section-label">Thông tin xe cơ bản</p>
+                    <div class="row g-3 mb-4 border-bottom pb-4">
+                        <div class="col-md-6">
+                            <label class="form-label">Hãng xe</label>
+                            <input type="text" id="e-brand" class="form-control" placeholder="Hãng xe" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Tên xe</label>
+                            <input type="text" id="e-name" class="form-control" placeholder="Tên xe" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Biển số</label>
+                            <input type="text" id="e-plate" class="form-control" placeholder="30A-123.45" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Nhiên liệu</label>
+                            <select id="e-fuel" class="form-select">
+                                <option value="Xăng">Xăng</option>
+                                <option value="Dầu">Dầu</option>
+                                <option value="Điện">Điện</option>
+                                <option value="Hybrid">Hybrid</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Số KM hiện tại</label>
+                            <input type="number" id="e-km" class="form-control" placeholder="Ví dụ: 55000" required>
+                        </div>
+                    </div>
 
-				<div class="mt-4 pt-4 border-top d-flex gap-2">
-					<button type="submit" class="btn btn-primary px-5 fw-bold shadow-sm">LƯU DỮ LIỆU</button>
-					<a href="list.html" class="btn btn-light px-4 border">Hủy bỏ</a>
-				</div>
-			</form>
-		</div>
-	</div>
-	<script src="script.js"></script>
-	<script>window.onload = initEditorPage;</script>
-    <footer class="bg-white border-top py-3 text-center mt-auto">
-        <div class="container">
-            <p class="mb-0">© 2026 <strong>YourCarManagement</strong>. Toàn bộ dữ liệu được đồng bộ Cloud.</p>
-        </div>
-    </footer>
+                    <p class="section-label">Thông tin người lái xe (Tài xế)</p>
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-8">
+                            <label class="form-label">Họ tên tài xế</label>
+                            <input type="text" id="e-driver" class="form-control" placeholder="Tên người lái">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Hạng bằng</label>
+                            <select id="e-license-rank" class="form-select">
+                                <option value="B1">B1</option>
+                                <option value="B2">B2</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                                <option value="E">E</option>
+                                <option value="F">F</option>
+                                <option value="FC">FC</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Số điện thoại</label>
+                            <input type="text" id="e-phone" class="form-control" placeholder="09xxxxxxxx">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 mt-4">
+                    <p class="section-label">Lịch bảo trì & Giấy tờ (10 Mục)</p>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label red-label">Hạn Đăng kiểm</label>
+                            <input type="date" id="e-registry" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label red-label">Hạn Bảo hiểm</label>
+                            <input type="date" id="e-insurance" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Phí đường bộ</label>
+                            <input type="date" id="e-roadfee" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Hạn Thay dầu</label>
+                            <input type="date" id="e-oil" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Hạn Lọc gió/nhớt</label>
+                            <input type="date" id="e-filter" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Hạn Đảo lốp</label>
+                            <input type="date" id="e-tire" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Bảo dưỡng phanh</label>
+                            <input type="date" id="e-brake" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Vệ sinh máy lạnh</label>
+                            <input type="date" id="e-aircon" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label blue-label">Hạn Bằng lái</label>
+                            <input type="date" id="e-license-expiry" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label">Ghi chú thêm</label>
+                    <textarea id="e-note" class="form-control" rows="3" placeholder="Nhập các lưu ý về tình trạng xe..."></textarea>
+                </div>
+
+                <div class="col-12 mt-5 mb-5">
+                    <button type="submit" class="btn btn-primary btn-save text-white me-2 shadow-sm">LƯU DỮ LIỆU</button>
+                    <a href="list.html" class="btn btn-cancel shadow-sm">Hủy bỏ</a>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script src="script.js"></script>
+    <script>
+        const user = checkAuth();
+        const carId = new URLSearchParams(window.location.search).get('id');
+        function previewImg(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    document.getElementById('preview').src = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        async function fetchCarDetail() {
+            if (!carId) return;
+            try {
+                const res = await fetch(getUrl(`users/${user}/cars/${carId}`));
+                const c = await res.json();
+                if (c) {
+                    document.getElementById('e-brand').value = c.brand || '';
+                    document.getElementById('e-name').value = c.name || '';
+                    document.getElementById('e-plate').value = c.plate || '';
+                    document.getElementById('e-fuel').value = c.fuel || 'Xăng';
+                    document.getElementById('e-km').value = c.km || '';
+                    document.getElementById('e-driver').value = c.driver || '';
+                    document.getElementById('e-license-rank').value = c.licenseRank || 'B1';
+                    document.getElementById('e-phone').value = c.phone || '';
+                    document.getElementById('e-registry').value = c.registry || '';
+                    document.getElementById('e-insurance').value = c.insurance || '';
+                    document.getElementById('e-roadfee').value = c.roadfee || '';
+                    document.getElementById('e-oil').value = c.oil || '';
+                    document.getElementById('e-filter').value = c.filter || '';
+                    document.getElementById('e-tire').value = c.tire || '';
+                    document.getElementById('e-brake').value = c.brake || '';
+                    document.getElementById('e-aircon').value = c.aircon || '';
+                    document.getElementById('e-license-expiry').value = c.licenseExpiry || '';
+                    document.getElementById('e-note').value = c.note || '';
+                    if (c.img) document.getElementById('preview').src = c.img;
+                }
+            } catch (err) {
+                console.error("Lỗi khi tải dữ liệu xe:", err);
+            }
+        }
+        document.getElementById('edit-form').onsubmit = async (e) => {
+            e.preventDefault();
+            
+            const data = {
+                brand: document.getElementById('e-brand').value,
+                name: document.getElementById('e-name').value,
+                plate: document.getElementById('e-plate').value,
+                fuel: document.getElementById('e-fuel').value,
+                km: document.getElementById('e-km').value,
+                driver: document.getElementById('e-driver').value,
+                licenseRank: document.getElementById('e-license-rank').value,
+                phone: document.getElementById('e-phone').value,
+                registry: document.getElementById('e-registry').value,
+                insurance: document.getElementById('e-insurance').value,
+                roadfee: document.getElementById('e-roadfee').value,
+                oil: document.getElementById('e-oil').value,
+                filter: document.getElementById('e-filter').value,
+                tire: document.getElementById('e-tire').value,
+                brake: document.getElementById('e-brake').value,
+                aircon: document.getElementById('e-aircon').value,
+                licenseExpiry: document.getElementById('e-license-expiry').value,
+                note: document.getElementById('e-note').value,
+                img: document.getElementById('preview').src // Lưu chuỗi Base64
+            };
+
+            try {
+                await fetch(getUrl(`users/${user}/cars/${carId}`), {
+                    method: 'PATCH',
+                    body: JSON.stringify(data)
+                });
+                alert("Cập nhật hồ sơ xe thành công!");
+                window.location.href = 'list.html';
+            } catch (err) {
+                alert("Lỗi khi lưu dữ liệu. Vui lòng thử lại!");
+            }
+        };
+    </script>
 </body>
 </html>
