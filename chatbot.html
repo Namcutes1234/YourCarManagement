@@ -2,123 +2,54 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>YourCarManagement - Chatbot</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YourCarManagement - AI chat</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-<style>
-    /* Tổng thể trang */
-    body { 
-        background-color: #f0f2f5; 
-        display: flex; 
-        flex-direction: column; 
-        min-height: 100vh; 
-        font-family: 'Inter', sans-serif; 
-    }
-    .content-wrapper { flex: 1 0 auto; padding: 20px 0; }
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { background-color: #f0f2f5; display: flex; flex-direction: column; min-height: 100vh; font-family: 'Inter', sans-serif; }
+        .content-wrapper { flex: 1 0 auto; padding: 20px 0; }
+        .chat-card { border: none; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); overflow: hidden; background: #fff; max-width: 900px; margin: auto; }
+        
+        #chat-content { 
+            height: 500px; overflow-y: auto; background: #ffffff; padding: 25px;
+            display: flex; flex-direction: column; gap: 20px; border-bottom: 1px solid #f0f0f0;
+        }
+        #chat-content::-webkit-scrollbar { width: 6px; }
+        #chat-content::-webkit-scrollbar-thumb { background: #e0e0e0; border-radius: 10px; }
+        .user-msg-wrapper { align-self: flex-end; max-width: 80%; }
+        .user-msg { 
+            background: #0d6efd; color: white; border-radius: 18px 18px 2px 18px; 
+            padding: 12px 18px; font-size: 14px; line-height: 1.5; box-shadow: 0 4px 12px rgba(13, 110, 253, 0.15);
+        }
+        .bot-msg-wrapper { align-self: flex-start; max-width: 85%; }
+        .bot-msg { 
+            background: #f8f9fa; color: #333; border-radius: 18px 18px 18px 2px; 
+            padding: 12px 18px; font-size: 14px; line-height: 1.6; border: 1px solid #eef0f2;
+        }
+        .bot-name { font-size: 11px; font-weight: 700; color: #0d6efd; text-transform: uppercase; margin-bottom: 6px; display: flex; align-items: center; }
+        .chat-input-area { padding: 20px; background: #fff; }
+        .input-group-custom { 
+            background: #f1f3f4; border-radius: 30px; padding: 8px 10px 8px 25px; display: flex; align-items: center; 
+        }
+        #chat-input { border: none; background: transparent; flex: 1; outline: none; font-size: 14px; }
+        
+        .btn-send { 
+            background: #0d6efd; color: white; border-radius: 50%; width: 45px; height: 45px; 
+            display: flex; align-items: center; justify-content: center; border: none; transition: 0.3s;
+        }
+        .btn-send:hover { transform: scale(1.05); background: #0056b3; }
 
-    /* Khung Chat */
-    .chat-card {
-        border: none;
-        border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-        overflow: hidden;
-        background: #fff;
-    }
-
-    /* Vùng nội dung chat */
-    #chat-content { 
-        height: 450px; 
-        overflow-y: auto; 
-        background: #ffffff; 
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-        border-bottom: 1px solid #f0f0f0;
-    }
-
-    /* Tùy chỉnh thanh cuộn */
-    #chat-content::-webkit-scrollbar { width: 5px; }
-    #chat-content::-webkit-scrollbar-thumb { background: #e0e0e0; border-radius: 10px; }
-
-    /* Bong bóng tin nhắn Người dùng */
-    .user-msg-wrapper { align-self: flex-end; max-width: 80%; }
-    .user-msg { 
-        background: #0d6efd; 
-        color: white; 
-        border-radius: 18px 18px 2px 18px; 
-        padding: 10px 16px; 
-        font-size: 13.5px;
-        line-height: 1.5;
-        box-shadow: 0 4px 10px rgba(13, 110, 253, 0.2);
-    }
-
-    /* Bong bóng tin nhắn AI (Bot) */
-    .bot-msg-wrapper { align-self: flex-start; max-width: 85%; }
-    .bot-msg { 
-        background: #f1f3f4; 
-        color: #3c4043; 
-        border-radius: 18px 18px 18px 2px; 
-        padding: 12px 18px; 
-        font-size: 13.5px;
-        line-height: 1.6;
-        border: 1px solid #e8eaed;
-    }
-
-    /* Label tên AI */
-    .bot-name {
-        font-size: 11px;
-        font-weight: 700;
-        color: #0d6efd;
-        text-transform: uppercase;
-        margin-bottom: 4px;
-        display: flex;
-        align-items: center;
-    }
-
-    /* Thanh nhập liệu */
-    .chat-input-area { padding: 15px 20px; background: #fff; }
-    .input-group { 
-        background: #f8f9fa; 
-        border-radius: 30px; 
-        padding: 5px 10px 5px 20px;
-        border: 1px solid #eee;
-    }
-    #chat-input { 
-        border: none; 
-        background: transparent; 
-        box-shadow: none; 
-        font-size: 14px;
-        padding: 10px 0;
-    }
-    #chat-input:focus { outline: none; }
-    
-    .btn-send { 
-        background: #0d6efd; 
-        color: white; 
-        border-radius: 50% !important; 
-        width: 40px; 
-        height: 40px; 
-        display: flex; 
-        align-items: center; 
-        justify-content: center;
-        transition: 0.3s;
-        border: none;
-    }
-    .btn-send:hover { transform: scale(1.1); background: #0056b3; }
-
-    /* Navbar & Footer Small Text */
-    .nav-link { font-size: 14px !important; }
-    footer { font-size: 11px; flex-shrink: 0; color: #6c757d; }
-</style>
+        footer { font-size: 11px; color: #6c757d; text-align: center; padding: 20px 0; }
+    </style>
 </head>
-<body class="bg-light">
+<body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
         <div class="container">
             <a class="navbar-brand fw-bold" href="home.html">
                 <i class="fas fa-car-side me-2"></i>YourCarManagement
             </a>
-
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon" style="width: 1.2rem; height: 1.2rem;"></span>
             </button>
@@ -155,17 +86,32 @@
             </div>
         </div>
     </nav>
-    <div class="content-wrapper container mt-4">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card shadow-sm border-0">
-                    <div class="card-header bg-white fw-bold"><i class="fas fa-robot text-primary me-2"></i>YourCarManagement AI</div>
-                    <div class="card-body">
-                        <div id="chat-content" class="mb-3"></div>
-                        <div class="input-group">
-                            <input type="text" id="chat-input" class="form-control" placeholder="Hỏi về bảo trì, thông số xe...">
-                            <button onclick="sendMessage()" class="btn btn-primary"><i class="fas fa-paper-plane"></i></button>
-                        </div>
+    <div class="content-wrapper">
+        <div class="container">
+            <div class="chat-card shadow">
+                <div class="bg-light p-3 border-bottom d-flex align-items-center">
+                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-0 fw-bold">YourCarManagement AI - Trợ lý bảo trì xe</h6>
+                        <small class="text-success" style="font-size: 11px;"><i class="fas fa-circle me-1" style="font-size: 8px;"></i> Đang trực tuyến (Powered by Groq)</small>
+                    </div>
+                </div>
+
+                <div id="chat-content">
+                    <div class="bot-msg-wrapper">
+                        <div class="bot-name"><i class="fas fa-robot me-1"></i> YourCarManagement AI</div>
+                        <div class="bot-msg">Xin chào! Mình là trợ lý AI. Mình đã nắm được danh sách xe của bạn. Bạn cần mình tư vấn gì về bảo trì hay đăng kiểm không?</div>
+                    </div>
+                </div>
+
+                <div class="chat-input-area">
+                    <div class="input-group-custom">
+                        <input type="text" id="chat-input" placeholder="Hỏi về lịch thay dầu, đăng kiểm..." autocomplete="off">
+                        <button class="btn-send" onclick="sendMessage()">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -177,30 +123,6 @@
         </div>
     </footer>
     <script src="script.js"></script>
-    <script>
-        const user = checkAuth();
-        const GEMINI_KEY = "AIzaSyDsQRlsNhc6tbmrzGsEBS18Pijox--6PEY";
-        async function sendMessage() {
-            const input = document.getElementById('chat-input');
-            const content = document.getElementById('chat-content');
-            const txt = input.value.trim();
-            if(!txt) return;
-            content.innerHTML += `<div class="text-end mb-3"><div class="user-msg">${txt}</div></div>`;
-            input.value = "";
-            const res = await fetch(getUrl(`users/${user}/cars`));
-            const cars = await res.json();
-            const carCtx = cars ? JSON.stringify(cars) : "Chưa có xe";
-            try {
-                const aiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite-preview:generateContent?key=${GEMINI_KEY}`, {
-                    method: "POST",
-                    body: JSON.stringify({ contents: [{ parts: [{ text: `Bạn là trợ lý YourCarManagement. ${user} đang hỏi. Dữ liệu xe: ${carCtx}. Câu hỏi: ${txt}` }] }] })
-                });
-                const data = await aiRes.json();
-                const reply = data.candidates[0].content.parts[0].text;
-                content.innerHTML += `<div class="text-start mb-3"><div class="bot-msg"><b>AI:</b><br>${reply.replace(/\n/g, '<br>')}</div></div>`;
-            } catch(e) { alert("Hết lượt dùng hoặc lỗi Key!"); }
-            content.scrollTop = content.scrollHeight;
-        }
-    </script>
+    <script src="chatbot.js"></script>
 </body>
 </html>
