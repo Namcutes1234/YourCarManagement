@@ -75,7 +75,7 @@
             <div class="row g-4">
                 <div class="col-md-4">
                     <p class="section-label">Hình ảnh đại diện</p>
-                    <img id="preview" src="https://via.placeholder.com/400x300?text=No+Image" class="img-preview mb-3" alt="Car Image">
+                    <img id="preview" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'><rect width='100%' height='100%' fill='%23e9ecef'/><text x='50%' y='50%' font-family='sans-serif' font-size='16' fill='%236c757d' dominant-baseline='middle' text-anchor='middle'>📸 Chưa có hình ảnh</text></svg>" class="img-preview mb-3" alt="Car Image">
                     <input type="file" id="e-img" class="form-control mb-2" accept="image/*" onchange="previewImg(this)">
                     <p class="text-muted" style="font-size: 11px;">* Nên dùng ảnh dưới 1MB để đảm bảo tốc độ đồng bộ.</p>
                 </div>
@@ -136,7 +136,7 @@
                 </div>
 
                 <div class="col-12 mt-4">
-                    <p class="section-label">Lịch bảo trì & Giấy tờ (10 Mục)</p>
+                    <h6 class="fw-bold text-secondary">Lịch bảo trì & Giấy tờ (10 Mục)</h6>
                     <div class="row g-3">
                         <div class="col-md-4">
                             <label class="form-label red-label">Hạn Đăng kiểm</label>
@@ -176,7 +176,34 @@
                         </div>
                     </div>
                 </div>
+                <div class="row g-3 mb-4 pt-3 border-top">
+                <div class="col-12">
+                    <h6 class="fw-bold text-secondary"><i class="fas fa-sliders-h me-2"></i>Hạng mục tùy chỉnh thêm</h6>
+                </div>
+                <div class="col-md-4">
+                    <div class="card p-3 bg-light border-0 dynamic-item">
+                        <label class="form-label small fw-semibold text-primary">Hạng mục tự chọn 1</label>
+                        <input type="text" id="custom1_label" class="form-control mb-2" placeholder="Ví dụ: Thay bình ắc quy, Gia hạn định vị...">
+                        <input type="date" id="custom1_date" class="form-control">
+                    </div>
+                </div>
 
+                <div class="col-md-4">
+                    <div class="card p-3 bg-light border-0 dynamic-item">
+                        <label class="form-label small fw-semibold text-primary">Hạng mục tự chọn 2</label>
+                        <input type="text" id="custom2_label" class="form-control mb-2" placeholder="Ví dụ: Rửa khoang máy...">
+                        <input type="date" id="custom2_date" class="form-control">
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card p-3 bg-light border-0 dynamic-item">
+                        <label class="form-label small fw-semibold text-primary">Hạng mục tự chọn 3</label>
+                        <input type="text" id="custom3_label" class="form-control mb-2" placeholder="Ví dụ: Thay gạt mưa...">
+                        <input type="date" id="custom3_date" class="form-control">
+                    </div>
+                </div>
+            </div>
                 <div class="col-12">
                     <label class="form-label">Ghi chú thêm</label>
                     <textarea id="e-note" class="form-control" rows="3" placeholder="Nhập các lưu ý về tình trạng xe..."></textarea>
@@ -193,6 +220,7 @@
     <script>
         const user = checkAuth();
         const carId = new URLSearchParams(window.location.search).get('id');
+        
         function previewImg(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
@@ -202,6 +230,7 @@
                 reader.readAsDataURL(input.files[0]);
             }
         }
+        
         async function fetchCarDetail() {
             if (!carId) return;
             try {
@@ -227,11 +256,37 @@
                     document.getElementById('e-license-expiry').value = c.licenseExpiry || '';
                     document.getElementById('e-note').value = c.note || '';
                     if (c.img) document.getElementById('preview').src = c.img;
+                    
+                    // --- ĐÃ THÊM: ĐỔ DỮ LIỆU CUSTOM NGƯỢC LÊN FORM KHI TẢI LẠI TRANG ---
+                    if (document.getElementById('custom1_label')) {
+                        document.getElementById('custom1_label').value = c.custom1_label || '';
+                    }
+                    if (document.getElementById('custom1_date')) {
+                        document.getElementById('custom1_date').value = c.custom1_date || '';
+                    }
+
+                    if (document.getElementById('custom2_label')) {
+                        document.getElementById('custom2_label').value = c.custom2_label || '';
+                    }
+                    if (document.getElementById('custom2_date')) {
+                        document.getElementById('custom2_date').value = c.custom2_date || '';
+                    }
+
+                    if (document.getElementById('custom3_label')) {
+                        document.getElementById('custom3_label').value = c.custom3_label || '';
+                    }
+                    if (document.getElementById('custom3_date')) {
+                        document.getElementById('custom3_date').value = c.custom3_date || '';
+                    }
                 }
             } catch (err) {
                 console.error("Lỗi khi tải dữ liệu xe:", err);
             }
         }
+        
+        // Gọi hàm tải dữ liệu ban đầu
+        fetchCarDetail();
+
         document.getElementById('edit-form').onsubmit = async (e) => {
             e.preventDefault();
             
@@ -253,8 +308,18 @@
                 brake: document.getElementById('e-brake').value,
                 aircon: document.getElementById('e-aircon').value,
                 licenseExpiry: document.getElementById('e-license-expiry').value,
-                note: document.getElementById('e-note').value,
-                img: document.getElementById('preview').src // Lưu chuỗi Base64
+                img: document.getElementById('preview').src, // Base64
+                
+                // 3 Hạng mục tùy chọn thêm (Custom choices)
+                custom1_label: document.getElementById('custom1_label').value.trim(),
+                custom1_date: document.getElementById('custom1_date').value,
+                custom2_label: document.getElementById('custom2_label').value.trim(),
+                custom2_date: document.getElementById('custom2_date').value,
+                custom3_label: document.getElementById('custom3_label').value.trim(),
+                custom3_date: document.getElementById('custom3_date').value,
+                
+                // Ghi chú
+                note: document.getElementById('e-note') ? document.getElementById('e-note').value : document.getElementById('note').value
             };
 
             try {

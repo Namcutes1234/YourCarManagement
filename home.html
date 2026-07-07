@@ -165,14 +165,19 @@
                     { key: 'tire', label: 'Hạn đảo lốp' },
                     { key: 'brake', label: 'Bảo dưỡng phanh' },
                     { key: 'aircon', label: 'Vệ sinh máy lạnh' },
-                    { key: 'licenseExpiry', label: 'Hạn bằng lái' }
+                    { key: 'licenseExpiry', label: 'Hạn bằng lái' },
+                    
+                    // THÊM 3 DÒNG NÀY ĐỂ QUÉT CÁC Ô TỰ GÕ
+                    { key: 'custom1', label: 'Tùy chỉnh 1', isCustom: true },
+                    { key: 'custom2', label: 'Tùy chỉnh 2', isCustom: true },
+                    { key: 'custom3', label: 'Tùy chỉnh 3', isCustom: true }
                 ];
 
                 const alertContainer = document.getElementById('alert-box-container');
                 alertContainer.innerHTML = ''; // Xóa thông báo cũ trước khi render mới
 
-                // Đối tượng Set dùng để lưu trữ danh sách ID hoặc Biển số xe cần xử lý (tự động loại bỏ trùng lặp)
                 let needServiceCars = new Set();
+                let allAlerts = []; // Mảng tạm thời để chứa tất cả thông báo trước khi sắp xếp
 
                 // Duyệt qua từng xe trong hệ thống
                 carsArray.forEach(car => {
@@ -181,42 +186,96 @@
 
                     // Duyệt qua từng mục ngày hạn để kiểm tra
                     alertConfigs.forEach(config => {
-                        const dateValue = car[config.key];
+                        let dateValue = "";
+                        let labelText = config.label;
+
+                        // Kiểm tra xem mục đang quét là mục cố định hay mục tự gõ (Custom)
+                        if (config.isCustom) {
+                            // Lấy tên nhãn do người dùng tự gõ (ví dụ: car["custom1_label"])
+                            const customLabel = car[`${config.key}_label`];
+                            // Lấy ngày do người dùng chọn
+                            dateValue = car[`${config.key}_date`];
+                            
+                            if (customLabel && dateValue) {
+                                labelText = customLabel; // Đổi chữ "Tùy chỉnh 1" thành tên người dùng tự gõ
+                            } else {
+                                return; // Nếu ô này trống (người dùng không nhập) thì bỏ qua không quét
+                            }
+                        } else {
+                            // Đối với các mục mặc định hệ thống (đăng kiểm, bảo hiểm...)
+                            dateValue = car[config.key];
+                        }
                         
+                        // Tiến hành tính toán ngày hạn nếu có dữ liệu ngày
                         if (dateValue) {
                             const daysLeft = calculateDaysLeft(dateValue);
                             
-                            let alertText = "";
-                            let alertClass = "alert-info"; 
+                            // Ngưỡng báo tối đa: Hạn bằng lái là 30 ngày, các mục khác (kể cả tự gõ) là 15 ngày
+                            const maxThreshold = (config.key === 'licenseExpiry') ? 30 : 15;
 
-                            // Phân loại màu sắc và xác định xe cần bảo trì/xử lý hành chính (nếu quá hạn hoặc còn dưới 15 ngày)
-                            if (daysLeft <= 0) {
-                                alertClass = "alert-danger";
-                                needServiceCars.add(carId); // Đóng dấu xe này cần xử lý
-                            } else if (daysLeft <= 15) {
-                                alertClass = "alert-warning";
-                                needServiceCars.add(carId); // Đóng dấu xe này cần xử lý
+                            if (daysLeft <= maxThreshold) {
+                                let alertClass = "";
+                                let priority = 3; 
+
+                                // Phân chia màu sắc theo số ngày còn lại
+                                if (daysLeft <= 1) {
+                                    alertClass = "alert-danger";  // Đỏ
+                                    priority = 1;
+                                    needServiceCars.add(carId); 
+                                } else if (daysLeft <= 7) {
+                                    alertClass = "alert-warning"; // Vàng
+                                    priority = 2;
+                                    needServiceCars.add(carId);
+                                } else {
+                                    alertClass = "alert-success"; // Xanh
+                                    priority = 3;
+                                    needServiceCars.add(carId);
+                                }
+
+                                // Định dạng chuỗi văn bản hiển thị ra giao diện
+                                let alertText = "";
+                                if (daysLeft > 0) {
+                                    alertText = `Xe <strong>${carName}</strong>: Mục <strong>${labelText}</strong> còn <strong>${daysLeft} ngày</strong> (${dateValue}).`;
+                                } else if (daysLeft === 0) {
+                                    alertText = `Xe <strong>${carName}</strong>: Mục <strong>${labelText}</strong> <strong>đến hạn hôm nay!</strong> (${dateValue}).`;
+                                } else {
+                                    alertText = `Xe <strong>${carName}</strong>: Mục <strong>${labelText}</strong> đã <span class="badge bg-danger">quá hạn ${Math.abs(daysLeft)} ngày</span> (${dateValue}).`;
+                                }
+
+                                let iconClass = "fa-info-circle";
+                                if (priority === 1) iconClass = "fa-exclamation-triangle";
+                                if (priority === 2) iconClass = "fa-exclamation-circle";
+
+                                allAlerts.push({
+                                    priority: priority,
+                                    html: `
+                                        <div class="alert ${alertClass} alert-dismissible fade show mb-2 shadow-sm" role="alert" style="border-radius: 10px;">
+                                            <i class="fas ${iconClass} me-2"></i> ${alertText}
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        </div>
+                                    `
+                                });
                             }
-
-                            // Định dạng nội dung hiển thị ra giao diện
-                            if (daysLeft > 0) {
-                                alertText = `Xe <strong>${carName}</strong>: Mục <strong>${config.label}</strong> còn <strong>${daysLeft} ngày</strong> (${dateValue}).`;
-                            } else if (daysLeft === 0) {
-                                alertText = `Xe <strong>${carName}</strong>: Mục <strong>${config.label}</strong> <strong>đến hạn hôm nay!</strong> (${dateValue}).`;
-                            } else {
-                                alertText = `Xe <strong>${carName}</strong>: Mục <strong>${config.label}</strong> đã <span class="badge bg-danger">quá hạn ${Math.abs(daysLeft)} ngày</span> (${dateValue}).`;
-                            }
-
-                            // Đẩy thông báo ra giao diện chính
-                            alertContainer.innerHTML += `
-                                <div class="alert ${alertClass} alert-dismissible fade show mb-2 shadow-sm" role="alert" style="border-radius: 10px;">
-                                    <i class="fas fa-calendar-check me-2"></i> ${alertText}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>
-                            `;
                         }
                     });
                 });
+
+                // THỰC HIỆN SẮP XẾP: Thứ tự ưu tiên tăng dần (Đỏ 1 -> Vàng 2 -> Xanh 3)
+                allAlerts.sort((a, b) => a.priority - b.priority);
+
+                // Tiến hành render chuỗi HTML đã sắp xếp gọn gàng ra giao diện
+                allAlerts.forEach(alert => {
+                    alertContainer.innerHTML += alert.html;
+                });
+
+                // Nếu không có cảnh báo nào, hiện thông báo trống cho đẹp mắt
+                if (allAlerts.length === 0) {
+                    alertContainer.innerHTML = `
+                        <div class="alert alert-light text-center border shadow-sm" style="border-radius: 10px;">
+                            <i class="fas fa-check-circle text-success me-2"></i> Mọi thứ đều tuyệt vời! Không có hạng mục nào cần xử lý.
+                        </div>
+                    `;
+                }
 
                 // Cập nhật số lượng xe cần xử lý thực tế lên ô Thống kê (chính là size của Set)
                 document.getElementById('need-service').innerText = needServiceCars.size;
