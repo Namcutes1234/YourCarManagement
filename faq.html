@@ -14,13 +14,69 @@
             color: #ffc107 !important;
             transform: translateY(-1px);
         }
-        body { background-color: #f8f9fa; display: flex; flex-direction: column; min-height: 100vh; font-family: 'Inter', sans-serif; }
+        .custom-nav i {
+            font-size: 14px;
+        }
+        body { 
+            background-color: #f4f6f9; /* Sửa thành nền xám dịu để các khối câu hỏi màu trắng nổi bật hẳn lên */
+            display: flex; 
+            flex-direction: column; 
+            min-height: 100vh; 
+            font-family: 'Inter', sans-serif; 
+        }
         .content-wrapper { flex: 1 0 auto; padding-bottom: 50px; }
-        .faq-header { background: linear-gradient(135deg, #0d6efd 0%, #0043a8 100%); color: white; padding: 50px 0; margin-bottom: 30px; }
-        .accordion-item { border: none; margin-bottom: 1rem; border-radius: 10px !important; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .accordion-button { font-size: 14px; font-weight: 600; }
-        .accordion-button:not(.collapsed) { background-color: #f0f7ff; color: #0d6efd; }
-        .accordion-body { font-size: 13.5px; color: #4a4a4a; line-height: 1.6; }
+        .faq-header { 
+            background: linear-gradient(135deg, #0d6efd 0%, #0043a8 100%); 
+            color: white; 
+            padding: 50px 0; 
+            margin-bottom: 20px; 
+        }
+        
+        /* CSS sửa lỗi khoảng cách và thiết kế cho tiêu đề nhóm */
+        .group-title {
+            font-size: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding-bottom: 8px;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #e3e6f0;
+        }
+
+        /* Tối ưu lại Accordion nhìn sang xịn mịn hơn, không bị dẹt ngang */
+        .accordion-item { 
+            border: none; 
+            margin-bottom: 0.8rem; 
+            border-radius: 10px !important; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03); /* Đổ bóng nhẹ tạo chiều sâu */
+            overflow: hidden;
+        }
+        .accordion-button { 
+            font-size: 14px; 
+            font-weight: 600; 
+            color: #333;
+            padding: 16px 20px;
+            background-color: #ffffff;
+        }
+        /* Style khi câu hỏi được bấm mở */
+        .accordion-button:not(.collapsed) { 
+            background-color: #f0f7ff; 
+            color: #0d6efd; 
+            box-shadow: none;
+        }
+        .accordion-button::after {
+            background-size: 11px; /* Thu nhỏ icon mũi tên lại cho thanh thoát */
+        }
+        .accordion-body { 
+            font-size: 13.5px; 
+            color: #4a4a4a; 
+            line-height: 1.6; 
+            background-color: #ffffff;
+            padding: 15px 20px 20px 20px;
+            border-top: 1px solid #f8f9fa;
+        }
+
         .nav-link { font-size: 14px !important; }
         .navbar-brand { font-size: 1.2rem !important; }
         footer { font-size: 11px; flex-shrink: 0; color: #6c757d; }
@@ -46,12 +102,7 @@
                         <a class="nav-link px-3" href="list.html"><i class="fas fa-list me-1"></i>Danh sách xe</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link px-3" href="editor.html"><i class="fas fa-tools me-1"></i>Sửa thông tin</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link px-3" href="chatbot.html">
-                            <i class="fas fa-robot me-1"></i>AI Chat
-                        </a>
+                        <a class="nav-link px-3" href="chatbot.html"><i class="fas fa-robot me-1"></i>AI Chat</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link px-3" href="faq.html"><i class="fas fa-question-circle me-1"></i>FAQ</a>
@@ -59,7 +110,6 @@
                     <li class="nav-item">
                         <a class="nav-link px-3" href="about.html"><i class="fas fa-info-circle me-1"></i>Giới thiệu</a>
                     </li>
-                    
                     <li class="nav-item ms-lg-3">
                         <button onclick="handleLogout()" class="btn btn-outline-light btn-sm px-3 mt-2 mt-lg-0" style="border-radius: 20px; font-size: 13px;">
                             <i class="fas fa-sign-out-alt me-1"></i>Thoát
@@ -69,19 +119,23 @@
             </div>
         </div>
     </nav>
+
     <div class="content-wrapper">
         <div class="faq-header text-center">
             <div class="container">
                 <h3 class="fw-bold">Câu hỏi thường gặp</h3>
-                <p class="opacity-75 small">Giải đáp các thắc mắc phổ biến về hệ thống quản lý xe</p>
+                <p class="opacity-75 small">Giải đáp các thắc mắc phổ biến về hệ thống và cẩm nang sử dụng xe</p>
             </div>
         </div>
 
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-lg-7">
+                <div class="col-lg-8">
+                    
                     <div class="accordion" id="faqAccordion">
                         
+                        <div class="group-title text-primary"><i class="fas fa-laptop-code me-2"></i>1. Hướng dẫn sử dụng hệ thống</div>
+
                         <div class="accordion-item">
                             <h2 class="accordion-header">
                                 <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#q1">
@@ -103,7 +157,7 @@
                             </h2>
                             <div id="q2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
                                 <div class="accordion-body">
-                                    Có. Vì YourCarManagement sử dụng nền tảng lưu trữ đám mây (Global Storage), bạn chỉ cần đăng nhập tài khoản của mình trên bất kỳ trình duyệt web nào để xem và quản lý dữ liệu.
+                                    Có. Vì YourCarManagement sử dụng nền tảng lưu trữ đám mây, bạn chỉ cần đăng nhập tài khoản của mình trên bất kỳ trình duyệt máy tính hoặc điện thoại nào để xem và cập nhật dữ liệu đồng bộ.
                                 </div>
                             </div>
                         </div>
@@ -116,7 +170,7 @@
                             </h2>
                             <div id="q3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
                                 <div class="accordion-body">
-                                    Bạn truy cập vào mục "Danh sách xe", nhấn nút "Thêm xe mới" và điền các thông tin như: Hãng xe, Tên xe, Biển số và số KM hiện tại. Sau khi lưu, dữ liệu sẽ tự động đồng bộ.
+                                    Bạn truy cập vào mục "Danh sách xe", nhấn nút "Thêm xe mới" và điền các thông tin như: Hãng xe, Tên xe, Biển số và số ODO (KM) hiện tại. Sau khi bấm Lưu, dữ liệu lập tức hiển thị.
                                 </div>
                             </div>
                         </div>
@@ -129,7 +183,7 @@
                             </h2>
                             <div id="q4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
                                 <div class="accordion-body">
-                                    Trợ lý AI tích hợp sẵn có khả năng phân tích tình trạng xe dựa trên số KM (ODO) bạn cung cấp để đưa ra lời khuyên về bảo trì định kỳ, thay dầu hoặc kiểm tra các bộ phận quan trọng.
+                                    Trợ lý AI có khả năng phân tích trực tiếp thông số xe của bạn, tính toán ngày quá hạn đăng kiểm, bảo hiểm, nhắc lịch thay dầu, tư vấn lỗi kỹ thuật, và giải đáp mọi thắc mắc đời sống lái xe một cách tự nhiên.
                                 </div>
                             </div>
                         </div>
@@ -142,7 +196,416 @@
                             </h2>
                             <div id="q5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
                                 <div class="accordion-body">
-                                    YourCarManagement hiện không giới hạn số lượng xe bạn có thể thêm vào danh sách. Bạn có thể quản lý toàn bộ dàn xe của gia đình hoặc công ty chỉ với một tài khoản duy nhất.
+                                    YourCarManagement hiện không giới hạn số lượng xe. Bạn có thể thêm toàn bộ xe của các thành viên trong gia đình hoặc đội xe của công ty để quản lý tập trung trên một tài khoản.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q6">
+                                    Làm sao để sửa thông tin xe khi gõ sai biển số hoặc số KM?
+                                </button>
+                            </h2>
+                            <div id="q6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Trong giao diện "Danh sách xe", bạn nhấn vào thẻ xe cần chỉnh sửa, chọn nút "Sửa thông tin" (biểu tượng cây bút), tiến hành cập nhật lại số liệu chính xác rồi bấm "Cập nhật".
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q7">
+                                    Tại sao mục "Cần xử lý" trên Dashboard lại hiển thị số lượng khác với số thông báo?
+                                </button>
+                            </h2>
+                            <div id="q7" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Mục "Cần xử lý" hiển thị số lượng phương tiện đang gặp lỗi/hết hạn. Một chiếc xe có thể dính nhiều lỗi cùng lúc (vừa hết hạn đăng kiểm vừa quá hạn thay dầu), hệ thống sẽ gộp lại để bạn biết chính xác có bao nhiêu xe cần mang ra gara.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q8">
+                                    Tôi có thể xóa hẳn một chiếc xe ra khỏi danh sách quản lý không?
+                                </button>
+                            </h2>
+                            <div id="q8" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Có, bạn chỉ cần chọn xe muốn xóa trong danh sách và bấm nút "Xóa xe". Hệ thống sẽ hỏi lại để xác nhận nhằm tránh việc vô tình ấn nhầm làm mất dữ liệu lịch trình của xe.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q9">
+                                    Lịch sử trò chuyện với AI có bị mất đi khi tôi đăng xuất không?
+                                </button>
+                            </h2>
+                            <div id="q9" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Không. Lịch sử các phiên chat được lưu trữ an toàn theo tài khoản của bạn tại bộ nhớ cục bộ trình duyệt (LocalStorage) và đồng bộ theo định danh người dùng, giúp bạn xem lại bất cứ lúc nào.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q10">
+                                    Làm thế nào để đổi mật khẩu tài khoản YourCarManagement?
+                                </button>
+                            </h2>
+                            <div id="q10" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Bạn có thể vào mục "Tài khoản" hoặc "Cài đặt" trên thanh menu, chọn chuyên mục "Đổi mật khẩu", nhập mật khẩu hiện tại và thiết lập chuỗi mật khẩu mới để tăng cường tính bảo mật.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="group-title text-primary"><i class="fas fa-balance-scale me-2"></i>2. Quy định đăng kiểm & Thủ tục pháp lý</div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q11">
+                                    Chu kỳ đăng kiểm định kỳ của xe ô tô con không kinh doanh là bao lâu?
+                                </button>
+                            </h2>
+                            <div id="q11" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Theo quy định hiện hành, xe ô tô chở người đến 9 chỗ không kinh doanh vận tải có chu kỳ đầu là 36 tháng. Xe sản xuất dưới 7 năm có chu kỳ định kỳ là 24 tháng; sản xuất từ 7 đến 20 năm là 12 tháng và trên 20 năm là 6 tháng.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q12">
+                                    Quá hạn đăng kiểm ô tô bị phạt bao nhiêu tiền?
+                                </button>
+                            </h2>
+                            <div id="q12" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Quá hạn đăng kiểm dưới 1 tháng có thể bị phạt từ 2 - 3 triệu đồng và tước quyền sử dụng Giấy phép lái xe từ 1 - 3 tháng. Nếu quá hạn trên 1 tháng, mức phạt có thể lên tới 4 - 6 triệu đồng đối với tài xế và phạt thêm chủ xe.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q13">
+                                    Khi đi đăng kiểm xe cần chuẩn bị những giấy tờ gì?
+                                </button>
+                            </h2>
+                            <div id="q13" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Chủ xe cần xuất trình: Giấy đăng ký xe (hoặc bản sao kèm giấy biên nhận hợp pháp của tổ chức tín dụng), Giấy chứng nhận bảo hiểm trách nhiệm dân sự còn hiệu lực, và biên lai nộp các loại phí liên quan nếu có.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q14">
+                                    Bảo hiểm bắt buộc TNDS và Bảo hiểm thân vỏ khác nhau thế nào?
+                                </button>
+                            </h2>
+                            <div id="q14" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Bảo hiểm TNDS là bắt buộc theo luật nhằm bồi thường thiệt hại cho bên thứ ba khi xảy ra tai nạn. Bảo hiểm thân vỏ (vật chất xe) là tự nguyện, nhằm chi trả chi phí sửa chữa cho chính chiếc xe của bạn khi gặp va quệt, ngập nước, cháy nổ.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q15">
+                                    Lỗi phạt nguội có làm ảnh hưởng đến quá trình đăng kiểm không?
+                                </button>
+                            </h2>
+                            <div id="q15" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Có. Nếu xe chưa nộp phạt nguội, trung tâm đăng kiểm sẽ từ chối kiểm định hoặc chỉ cấp chứng nhận tạm thời có thời hạn hiệu lực ngắn (15 ngày) để chủ xe đi hoàn thành nghĩa vụ nộp phạt hành chính.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q16">
+                                    Thời hạn nộp phí bảo trì đường bộ được tính như thế nào?
+                                </button>
+                            </h2>
+                            <div id="q16" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Phí bảo trì đường bộ thường được nộp gộp cùng với chu kỳ đăng kiểm của xe để tiện theo dõi. Tuy nhiên, bạn cũng có thể chọn nộp theo năm (12 tháng) nếu chu kỳ đăng kiểm xe của bạn dài hơn.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q17">
+                                    Thay đổi màu sơn xe ô tô có bị từ chối đăng kiểm không?
+                                </button>
+                            </h2>
+                            <div id="q17" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Có. Việc tự ý thay đổi màu sơn khác với thông tin ghi trên Giấy đăng ký xe sẽ bị từ chối kiểm định. Bạn cần làm thủ tục xin đổi màu sơn tại cơ quan Cảnh sát giao thông trước khi đưa xe đi đăng kiểm.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q18">
+                                    Độ đèn LED hoặc đèn siêu sáng có đăng kiểm được không?
+                                </button>
+                            </h2>
+                            <div id="q18" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Việc thay thế linh kiện đèn phải đáp ứng quy định không làm thay đổi cấu trúc dây điện, có độ gom sáng tốt, đúng tiêu chuẩn kỹ thuật và không gây chói mắt người đối diện thì mới được chấp thuận kiểm định.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q19">
+                                    Hạn bằng lái B2 quá hạn dưới 3 tháng xử lý thế nào?
+                                </button>
+                            </h2>
+                            <div id="q19" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Nếu bằng lái B2 quá hạn dưới 3 tháng, bạn chỉ cần làm hồ sơ xin cấp đổi lại bằng lái mới mà không phải thi lại lý thuyết hay thực hành. Quá hạn từ 3 tháng đến 1 năm sẽ phải thi lại lý thuyết.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="group-title text-primary"><i class="fas fa-tools me-2"></i>3. Kinh nghiệm bảo trì & Chăm sóc động cơ</div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q20">
+                                    Bao lâu thì nên thay dầu nhớt động cơ ô tô một lần?
+                                </button>
+                            </h2>
+                            <div id="q20" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Thông thường, đối với dầu khoáng tiêu chuẩn là sau mỗi 5.000 km hoặc 6 tháng. Đối với các loại dầu tổng hợp cao cấp (Fully Synthetic), mốc thời gian có thể kéo dài từ 8.000 km đến 10.000 km.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q21">
+                                    Tỷ lệ thay lọc dầu nhớt so với thay nhớt máy là bao nhiêu?
+                                </button>
+                            </h2>
+                            <div id="q21" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Quy tắc chuẩn phổ biến là áp dụng tỷ lệ 2:1. Nghĩa là cứ sau 2 lần thay nhớt máy động cơ thì bạn nên tiến hành thay mới 1 cốc lọc dầu nhớt để đảm bảo giữ cặn bẩn tối ưu.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q22">
+                                    Khi nào cần thực hiện đảo lốp xe ô tô?
+                                </button>
+                            </h2>
+                            <div id="q22" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Bạn nên thực hiện đảo lốp định kỳ sau mỗi 8.000 km đến 10.000 km. Việc này giúp các lốp xe mòn đều nhau, kéo dài tuổi thọ của bộ lốp và duy trì độ bám đường an toàn ổn định.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q23">
+                                    Dấu hiệu nào cho thấy hệ thống phanh xe cần được bảo dưỡng ngay?
+                                </button>
+                            </h2>
+                            <div id="q23" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Khi đạp phanh nghe thấy tiếng rít kim loại ken két, bàn đạp phanh bị nhẹ/bồng bềnh, xe có hiện tượng lệch sang một bên khi phanh hoặc đèn cảnh báo má phanh phát sáng trên bảng đồng hồ taplo.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q24">
+                                    Bao lâu thì nên vệ sinh hoặc thay mới lọc gió điều hòa (máy lạnh)?
+                                </button>
+                            </h2>
+                            <div id="q24" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Nên vệ sinh lọc gió sau mỗi 5.000 km và thay mới hoàn toàn sau khoảng 20.000 km. Trong điều kiện môi trường nhiều khói bụi ô nhiễm, thời gian thay thế cần được rút ngắn lại sớm hơn.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q25">
+                                    Nước làm mát động cơ ô tô bao lâu phải bổ sung hoặc thay mới?
+                                </button>
+                            </h2>
+                            <div id="q25" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Bạn nên kiểm tra bình nước phụ hàng tháng, nồng độ hao hụt cần châm thêm. Nên súc rửa két nước và thay thế toàn bộ nước làm mát sau mỗi 40.000 km – 50.000 km (khoảng 2-3 năm sử dụng).
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q26">
+                                    Ắc quy ô tô thường có tuổi thọ bao lâu và làm sao biết sắp hỏng?
+                                </button>
+                            </h2>
+                            <div id="q26" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Ắc quy ô tô có tuổi thọ dao động từ 2 - 4 năm. Biểu hiện sắp hỏng bao gồm: Đề máy lâu nổ, âm thanh đề yếu, đèn xe bị mờ khi không nổ máy, hoặc cọc bình xuất hiện muối trắng bám đầy.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q27">
+                                    Tại sao vô lăng xe bị rung lắc khi chạy ở tốc độ cao?
+                                </button>
+                            </h2>
+                            <div id="q27" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Hiện tượng vô lăng rung lắc ở tốc độ cao thường do bánh xe bị mất cân bằng động, lốp xe bị mòn lệch, méo vành áp suất hoặc hệ thống rô-tuyển lái bị rơ lỏng sau thời gian dài vận hành.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q28">
+                                    Khi nào cần tiến hành thay dây curoa cam của xe?
+                                </button>
+                            </h2>
+                            <div id="q28" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Dây curoa cam đóng vai trò điều phối động cơ, nên thay mới sau mỗi 80.000 km đến 100.000 km. Đứt dây curoa cam khi đang chạy có thể phá hủy hoàn toàn lốc máy và làm cong bộ xu-páp.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="group-title text-primary"><i class="fas fa-exclamation-triangle me-2"></i>4. Kỹ năng xử lý sự cố khẩn cấp trên đường</div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q29">
+                                    Đang lái xe trên đường mà kim nhiệt độ động cơ báo vạch đỏ thì phải làm gì?
+                                </button>
+                            </h2>
+                            <div id="q29" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Hãy lập tức tấp xe vào lề đường an toàn, vị trí thoáng mát, chuyển số về P, kéo phanh tay nhưng vẫn để động cơ nổ máy ở chế độ không tải khoảng 5 phút, tắt điều hòa. Tuyệt đối KHÔNG mở nắp két nước ngay lúc này vì nước sôi áp suất cao sẽ phun ra gây bỏng nặng.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q30">
+                                    Làm thế nào để xử lý sự cố xe bị mất phanh (mất thắng) khi đang chạy?
+                                </button>
+                            </h2>
+                            <div id="q30" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Giữ bình tĩnh, tuyệt đối không tắt máy xe. Hãy nhấp phanh liên tục để tìm kiếm áp suất dư, chủ động chuyển cần số về các cấp số thấp (mô-men xoắn ghì xe bằng động cơ), phối hợp kéo nhẹ nhàng phanh tay và tìm bờ tường, dải phân cách trống để phối hợp cọ xát giảm tốc độ.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q31">
+                                    Cách kích bình ắc quy từ xe khác cứu hộ sang đúng kỹ thuật như thế nào?
+                                </button>
+                            </h2>
+                            <div id="q31" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Nối kẹp ĐỎ vào cực Dương (+) bình hết điện, đầu ĐỎ kia vào cực Dương (+) bình cứu hộ. Tiếp theo, nối kẹp ĐEN vào cực Âm (-) bình cứu hộ, đầu ĐEN còn lại kẹp vào một bộ phận kim loại không sơn trong khoang máy xe hết điện. Nổ máy xe cứu hộ trước rồi tiến hành đề máy xe hết điện.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q32">
+                                    Xe bị ngập nước chết máy giữa đường có nên đề nổ lại không?
+                                </button>
+                            </h2>
+                            <div id="q32" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Tuyệt đối KHÔNG ĐỀ NỔ LẠI máy. Việc cố tình đề nổ khi nước đã lọt vào buồng đốt sẽ gây ra hiện tượng thủy kích, làm cong, gãy tay biên và vỡ lốc máy. Hãy tắt điện, chuyển số về N, đẩy xe lên chỗ cao và gọi cứu hộ.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q33">
+                                    Áp suất lốp tiêu chuẩn của xe thường nằm ở vị trí nào để kiểm tra?
+                                </button>
+                            </h2>
+                            <div id="q33" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Thông số áp suất lốp khuyến nghị từ nhà sản xuất thường được in rõ ràng trên một nhãn dán ở khung cửa bên ghế lái (cột B), hoặc phía trong nắp bình xăng, hướng dẫn chi tiết chỉ số PSI/Bar tương ứng tải trọng.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q34">
+                                    Làm sao để nhận biết lốp xe ô tô bị dính đinh khi đang di chuyển?
+                                </button>
+                            </h2>
+                            <div id="q34" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Vô lăng xe có cảm giác nặng, xe bị ghì kéo nhẹ về một phía, tiếng lốp kêu "bạch bạch" đều đặn theo tốc độ vòng quay bánh xe, hoặc hệ thống cảm biến áp suất lốp (TPMS) phát tín hiệu cảnh báo sụt áp.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q35">
+                                    Chìa khóa thông minh (Smartkey) hết pin giữa đường làm sao mở cửa nổ máy?
+                                </button>
+                            </h2>
+                            <div id="q35" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Rút chìa khóa cơ dự phòng giấu bên trong thân Smartkey để mở ổ khóa cửa. Sau khi vào trong xe, ấn nút Engine Start/Stop bằng cách lấy trực tiếp đầu của chiếc chìa khóa thông minh áp sát dí thẳng vào nút bấm đề để chip nhận diện từ tính tầm gần.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q36">
+                                    Khi xe bị sa lầy vào vũng bùn cát thì mẹo thoát lầy nhanh là gì?
+                                </button>
+                            </h2>
+                            <div id="q36" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Tắt hệ thống cân bằng điện tử (ESP/TCS), dùng kích nâng nhẹ bánh xe lên lót thêm thảm cao su, cành cây, bao tải gỗ dưới lốp để tạo điểm bám ma sát, hoặc xả bớt một chút hơi lốp xe để bề mặt bánh tiếp xúc rộng hơn.
                                 </div>
                             </div>
                         </div>
@@ -152,6 +615,7 @@
             </div>
         </div>
     </div>
+
     <footer class="bg-white border-top py-3 text-center mt-auto">
         <div class="container">
             <p class="mb-0">© 2026 <strong>YourCarManagement</strong>. Toàn bộ dữ liệu được đồng bộ Cloud.</p>
