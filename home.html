@@ -157,22 +157,21 @@
 
                 // CẤU HÌNH CÁC MỤC QUÉT ALERT
                 const alertConfigs = [
-                    { key: 'registry', label: 'Hạn đăng kiểm' },
-                    { key: 'insurance', label: 'Hạn bảo hiểm' },
-                    { key: 'roadfee', label: 'Phí đường bộ' },
-                    { key: 'oil', label: 'Hạn thay dầu' },
-                    { key: 'filter', label: 'Hạn lọc gió/nhớt' },
-                    { key: 'tire', label: 'Hạn đảo lốp' },
-                    { key: 'brake', label: 'Bảo dưỡng phanh' },
-                    { key: 'aircon', label: 'Vệ sinh máy lạnh' },
-                    { key: 'licenseExpiry', label: 'Hạn bằng lái' },
+                    { key: 'registry', label: 'Hạn đăng kiểm', threshold: 15 },
+                    { key: 'licenseExpiry', label: 'Hạn bằng lái', threshold: 30 }, // Giữ nguyên ngưỡng báo bằng lái 30 ngày
+                    { key: 'insuranceVatchat', label: 'Bảo hiểm vật chất xe', threshold: 15 },
+                    { key: 'insuranceBatbuoc', label: 'Bảo hiểm bắt buộc (TNDS)', threshold: 15 },
+                    { key: 'oil', label: 'Hạn thay dầu', threshold: 15 },
+                    { key: 'filter', label: 'Hạn lọc gió/nhớt', threshold: 15 },
+                    { key: 'tire', label: 'Hạn đảo lốp', threshold: 15 },
+                    { key: 'brake', label: 'Bảo dưỡng phanh', threshold: 15 },
+                    { key: 'aircon', label: 'Vệ sinh máy lạnh', threshold: 15 },
                     
-                    // THÊM 3 DÒNG NÀY ĐỂ QUÉT CÁC Ô TỰ GÕ
-                    { key: 'custom1', label: 'Tùy chỉnh 1', isCustom: true },
-                    { key: 'custom2', label: 'Tùy chỉnh 2', isCustom: true },
-                    { key: 'custom3', label: 'Tùy chỉnh 3', isCustom: true }
+                    // 3 hạng mục tùy chỉnh tự gõ
+                    { key: 'custom1', label: 'Tùy chỉnh 1', isCustom: true, threshold: 15 },
+                    { key: 'custom2', label: 'Tùy chỉnh 2', isCustom: true, threshold: 15 },
+                    { key: 'custom3', label: 'Tùy chỉnh 3', isCustom: true, threshold: 15 }
                 ];
-
                 const alertContainer = document.getElementById('alert-box-container');
                 alertContainer.innerHTML = ''; // Xóa thông báo cũ trước khi render mới
 

@@ -37,7 +37,6 @@
         </div>
         
         <div class="auth-body">
-            <!-- Form Đăng Nhập -->
             <form id="login-form">
                 <div class="mb-3">
                     <label class="form-label">Tên đăng nhập (Email)</label>
@@ -48,9 +47,14 @@
                 </div>
                 <div class="mb-4">
                     <label class="form-label">Mật khẩu</label>
-                    <div class="input-group">
+                    <div class="input-group position-relative">
                         <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                        <input type="password" id="l-pass" class="form-control has-icon" placeholder="••••••••" required>
+                        <input type="password" id="l-pass" class="form-control has-icon pe-5" placeholder="••••••••" required>
+                        <span onclick="togglePassword('l-pass', 'toggle-icon-login')" 
+                              class="position-absolute top-50 end-0 translate-middle-y pe-3" 
+                              style="cursor: pointer; z-index: 10; color: #6c757d;">
+                            <i id="toggle-icon-login" class="fas fa-eye"></i>
+                        </span>
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary w-100 btn-auth mb-4">ĐĂNG NHẬP</button>
@@ -60,7 +64,6 @@
                 </div>
             </form>
 
-            <!-- Form Đăng Ký -->
             <form id="signup-form" class="hidden">
                 <div class="mb-3">
                     <label class="form-label">Tạo tên đăng nhập (Email)</label>
@@ -68,11 +71,25 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Mật khẩu</label>
-                    <input type="password" id="s-pass" class="form-control" placeholder="Tối thiểu 6 ký tự" required>
+                    <div class="position-relative">
+                        <input type="password" id="s-pass" class="form-control pe-5" placeholder="Tối thiểu 6 ký tự" required>
+                        <span onclick="togglePassword('s-pass', 'toggle-icon-spass')" 
+                              class="position-absolute top-50 end-0 translate-middle-y pe-3" 
+                              style="cursor: pointer; z-index: 10; color: #6c757d;">
+                            <i id="toggle-icon-spass" class="fas fa-eye"></i>
+                        </span>
+                    </div>
                 </div>
                 <div class="mb-4">
                     <label class="form-label">Xác nhận mật khẩu</label>
-                    <input type="password" id="s-confirm" class="form-control" placeholder="Nhập lại mật khẩu" required>
+                    <div class="position-relative">
+                        <input type="password" id="s-confirm" class="form-control pe-5" placeholder="Nhập lại mật khẩu" required>
+                        <span onclick="togglePassword('s-confirm', 'toggle-icon-sconfirm')" 
+                              class="position-absolute top-50 end-0 translate-middle-y pe-3" 
+                              style="cursor: pointer; z-index: 10; color: #6c757d;">
+                            <i id="toggle-icon-sconfirm" class="fas fa-eye"></i>
+                        </span>
+                    </div>
                 </div>
                 <button type="submit" class="btn btn-success w-100 btn-auth mb-4 shadow-sm" style="background-color: #28a745;">TẠO TÀI KHOẢN</button>
                 <div class="text-center">
@@ -85,6 +102,24 @@
 
     <script src="script.js"></script>
     <script>
+        // --- HÀM THÊM MỚI: XỬ LÝ ẨN/HIỆN MẬT KHẨU ---
+        function togglePassword(inputId, iconId) {
+            const passwordInput = document.getElementById(inputId);
+            const toggleIcon = document.getElementById(iconId);
+
+            if (passwordInput && toggleIcon) {
+                if (passwordInput.type === "password") {
+                    passwordInput.type = "text";
+                    toggleIcon.classList.remove("fa-eye");
+                    toggleIcon.classList.add("fa-eye-slash"); // Đổi thành mắt gạch chéo
+                } else {
+                    passwordInput.type = "password";
+                    toggleIcon.classList.remove("fa-eye-slash");
+                    toggleIcon.classList.add("fa-eye"); // Quay về mắt mở bình thường
+                }
+            }
+        }
+
         // Hàm làm sạch Email trước khi đưa vào đường dẫn Firebase
         function encodeEmail(email) {
             return email.toLowerCase().replace(/\./g, '_').replace(/@/g, '_');
@@ -108,7 +143,6 @@
             const rawUser = document.getElementById('l-user').value.trim();
             const p = document.getElementById('l-pass').value.trim();
             
-            // Mã hóa kí tự đặc biệt của email
             const u = encodeEmail(rawUser);
 
             try {
@@ -116,7 +150,6 @@
                 const data = await res.json();
 
                 if (data && data.password === p) {
-                    // Lưu chuỗi đã xử lý kí tự vào session để các trang sau (như chatbot) dùng gọi Firebase
                     sessionStorage.setItem('logged_in_user', u);
                     window.location.href = 'home.html';
                 } else {
@@ -138,7 +171,6 @@
             if (p !== cf) return alert("Mật khẩu xác nhận không khớp.");
             if (p.length < 6) return alert("Mật khẩu phải có ít nhất 6 ký tự.");
 
-            // Mã hóa kí tự đặc biệt của email
             const u = encodeEmail(rawUser);
 
             try {

@@ -137,42 +137,54 @@
 
                 <div class="col-12 mt-4">
                     <h6 class="fw-bold text-secondary">Lịch bảo trì & Giấy tờ (10 Mục)</h6>
-                    <div class="row g-3">
+                    <div class="row g-3 mb-4">
+                        <div class="col-12">
+                            <h6 class="fw-bold text-secondary"><i class="fas fa-tools me-2"></i>Lịch bảo trì & Giấy tờ</h6>
+                        </div>
+
                         <div class="col-md-4">
-                            <label class="form-label red-label">Hạn Đăng kiểm</label>
+                            <label class="form-label small fw-bold text-danger">Hạn Đăng kiểm</label>
                             <input type="date" id="e-registry" class="form-control">
                         </div>
+
                         <div class="col-md-4">
-                            <label class="form-label red-label">Hạn Bảo hiểm</label>
-                            <input type="date" id="e-insurance" class="form-control">
+                            <label class="form-label small fw-bold text-danger">Hạn Bằng lái</label>
+                            <input type="date" id="e-license-expiry" class="form-control">
                         </div>
+
                         <div class="col-md-4">
-                            <label class="form-label">Phí đường bộ</label>
-                            <input type="date" id="e-roadfee" class="form-control">
+                            <label class="form-label small fw-semibold text-secondary">Bảo hiểm vật chất xe</label>
+                            <input type="date" id="e-insurance-vatchat" class="form-control">
                         </div>
+
                         <div class="col-md-4">
-                            <label class="form-label">Hạn Thay dầu</label>
+                            <label class="form-label small fw-semibold text-secondary">Bảo hiểm bắt buộc (TNDS)</label>
+                            <input type="date" id="e-insurance-batbuoc" class="form-control">
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label small fw-semibold text-secondary">Hạn Thay dầu</label>
                             <input type="date" id="e-oil" class="form-control">
                         </div>
+
                         <div class="col-md-4">
-                            <label class="form-label">Hạn Lọc gió/nhớt</label>
+                            <label class="form-label small fw-semibold text-secondary">Hạn Lọc gió/nhớt</label>
                             <input type="date" id="e-filter" class="form-control">
                         </div>
+
                         <div class="col-md-4">
-                            <label class="form-label">Hạn Đảo lốp</label>
+                            <label class="form-label small fw-semibold text-secondary">Hạn Đảo lốp</label>
                             <input type="date" id="e-tire" class="form-control">
                         </div>
+
                         <div class="col-md-4">
-                            <label class="form-label">Bảo dưỡng phanh</label>
+                            <label class="form-label small fw-semibold text-secondary">Bảo dưỡng phanh</label>
                             <input type="date" id="e-brake" class="form-control">
                         </div>
+
                         <div class="col-md-4">
-                            <label class="form-label">Vệ sinh máy lạnh</label>
+                            <label class="form-label small fw-semibold text-secondary">Vệ sinh máy lạnh</label>
                             <input type="date" id="e-aircon" class="form-control">
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label blue-label">Hạn Bằng lái</label>
-                            <input type="date" id="e-license-expiry" class="form-control">
                         </div>
                     </div>
                 </div>
@@ -247,7 +259,8 @@
                     document.getElementById('e-phone').value = c.phone || '';
                     document.getElementById('e-registry').value = c.registry || '';
                     document.getElementById('e-insurance').value = c.insurance || '';
-                    document.getElementById('e-roadfee').value = c.roadfee || '';
+                    document.getElementById('e-insurance-vatchat').value = c.insuranceVatchat || '';
+                    document.getElementById('e-insurance-batbuoc').value = c.insuranceBatbuoc || '';
                     document.getElementById('e-oil').value = c.oil || '';
                     document.getElementById('e-filter').value = c.filter || '';
                     document.getElementById('e-tire').value = c.tire || '';
@@ -301,7 +314,8 @@
                 phone: document.getElementById('e-phone').value,
                 registry: document.getElementById('e-registry').value,
                 insurance: document.getElementById('e-insurance').value,
-                roadfee: document.getElementById('e-roadfee').value,
+                insuranceVatchat: document.getElementById('e-insurance-vatchat').value,
+                insuranceBatbuoc: document.getElementById('e-insurance-batbuoc').value,
                 oil: document.getElementById('e-oil').value,
                 filter: document.getElementById('e-filter').value,
                 tire: document.getElementById('e-tire').value,
