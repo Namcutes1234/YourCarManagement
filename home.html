@@ -119,9 +119,7 @@
             <!-- Vùng hiển thị Alert nhắc nhở lịch đăng kiểm / bảo hiểm -->
             <div id="alert-box-container" class="mb-4 alert-container"></div>
         </div>
-    </div> <!-- BỔ SUNG ĐÓNG THẺ CONTENT-WRAPPER VÀ CONTAINER TẠI ĐÂY -->
-
-    <!-- FOOTER ĐÃ ĐƯỢC ĐƯA RA NGOÀI HOÀN TOÀN, LUÔN Ở ĐÁY TRANG -->
+    </div>
     <footer class="bg-white border-top py-3 text-center mt-auto">
         <div class="container">
             <p class="mb-0">© 2026 <strong>YourCarManagement</strong>. Toàn bộ dữ liệu được đồng bộ Cloud.</p>
@@ -158,16 +156,16 @@
                 // CẤU HÌNH CÁC MỤC QUÉT ALERT
                 const alertConfigs = [
                     { key: 'registry', label: 'Hạn đăng kiểm', threshold: 15 },
-                    { key: 'licenseExpiry', label: 'Hạn bằng lái', threshold: 30 }, // Giữ nguyên ngưỡng báo bằng lái 30 ngày
+                    { key: 'licenseExpiry', label: 'Hạn bằng lái', threshold: 30 },
                     { key: 'insuranceVatchat', label: 'Bảo hiểm vật chất xe', threshold: 15 },
                     { key: 'insuranceBatbuoc', label: 'Bảo hiểm bắt buộc (TNDS)', threshold: 15 },
+                    { key: 'dangky', label: 'Hạn đăng kí', threshold: 15 }, // Sửa: dangky
+                    { key: 'giayNganhang', label: 'Hạn giấy đi đường Ngân Hàng', threshold: 15 }, // Sửa: giayNganhang
                     { key: 'oil', label: 'Hạn thay dầu', threshold: 15 },
                     { key: 'filter', label: 'Hạn lọc gió/nhớt', threshold: 15 },
                     { key: 'tire', label: 'Hạn đảo lốp', threshold: 15 },
                     { key: 'brake', label: 'Bảo dưỡng phanh', threshold: 15 },
                     { key: 'aircon', label: 'Vệ sinh máy lạnh', threshold: 15 },
-                    
-                    // 3 hạng mục tùy chỉnh tự gõ
                     { key: 'custom1', label: 'Tùy chỉnh 1', isCustom: true, threshold: 15 },
                     { key: 'custom2', label: 'Tùy chỉnh 2', isCustom: true, threshold: 15 },
                     { key: 'custom3', label: 'Tùy chỉnh 3', isCustom: true, threshold: 15 }

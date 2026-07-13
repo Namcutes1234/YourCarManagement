@@ -152,6 +152,15 @@
                             <label class="form-label small fw-bold text-danger">Bảo hiểm bắt buộc (TNDS)</label>
                             <input type="date" id="e-insurance-batbuoc" class="form-control">
                         </div>
+                        <div class="col-md-4">
+                            <label class="form-label small fw-bold text-danger">Hạn Đăng kí</label>
+                            <input type="date" id="e-dangky" class="form-control">
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label small fw-bold text-danger">Hạn giấy đi đường Ngân Hàng</label>
+                            <input type="date" id="e-giay-nganhang" class="form-control">
+                        </div>
                     </div>
                 </div>
                 <div class="col-12 mt-4">
@@ -246,6 +255,7 @@
                 'e-km': c.km, 'e-driver': c.driver, 'e-license-rank': c.licenseRank,
                 'e-phone': c.phone, 'e-registry': c.registry, 'e-license-expiry': c.licenseExpiry,
                 'e-insurance-vatchat': c.insuranceVatchat, 'e-insurance-batbuoc': c.insuranceBatbuoc,
+                'e-dangky': c.dangky,'e-giay-nganhang': c.giayNganhang,
                 'e-oil': c.oil, 'e-filter': c.filter, 'e-tire': c.tire, 'e-brake': c.brake,
                 'e-aircon': c.aircon, 'custom1_label': c.custom1_label, 'custom1_date': c.custom1_date,
                 'custom2_label': c.custom2_label, 'custom2_date': c.custom2_date,
@@ -298,6 +308,8 @@
                 licenseExpiry: document.getElementById('e-license-expiry').value,
                 insuranceVatchat: document.getElementById('e-insurance-vatchat').value,
                 insuranceBatbuoc: document.getElementById('e-insurance-batbuoc').value,
+                dangky: document.getElementById('e-dangky').value,
+                giayNganhang: document.getElementById('e-giay-nganhang').value,
                 oil: document.getElementById('e-oil').value,
                 filter: document.getElementById('e-filter').value,
                 tire: document.getElementById('e-tire').value,
