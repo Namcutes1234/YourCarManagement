@@ -7,28 +7,20 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        .navbar {
-            padding: 0.8rem 0 !important;
-        }
-        .custom-nav .nav-link:hover {
-            color: #ffc107 !important;
-            transform: translateY(-1px);
-        }
+        .navbar { padding: 0.8rem 0 !important; }
+        .custom-nav .nav-link:hover { color: #ffc107 !important; transform: translateY(-1px); }
         body { background-color: #fff; font-family: 'Segoe UI', sans-serif; color: #333; }
         .main-title { color: #0d6efd; font-weight: 700; text-align: center; margin-top: 20px; text-transform: uppercase; }
         .section-label { font-size: 14px; color: #666; margin-bottom: 8px; font-weight: 500; }
         .form-label { font-size: 14px; margin-bottom: 5px; }
         .form-control, .form-select { border-radius: 6px; border: 1px solid #dee2e6; padding: 8px 12px; font-size: 14px; }
         .img-preview { width: 100%; height: 280px; border: 1px solid #ddd; border-radius: 10px; object-fit: cover; background: #f9f9f9; }
-        .red-label { color: #dc3545 !important; font-weight: 500; }
-        .blue-label { color: #0d6efd !important; font-weight: 500; }
         .btn-save { background-color: #0d6efd; border: none; padding: 10px 40px; border-radius: 6px; font-weight: 600; transition: 0.3s; }
-        .btn-save:hover { background-color: #0056b3; transform: translateY(-1px); }
         .btn-cancel { background-color: #f8f9fa; border: 1px solid #ddd; padding: 10px 30px; border-radius: 6px; text-decoration: none; color: #333; }
-        .nav-link { font-size: 14px !important; }
     </style>
 </head>
 <body onload="fetchCarDetail()">
+
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
         <div class="container">
             <a class="navbar-brand fw-bold" href="home.html">
@@ -68,6 +60,7 @@
             </div>
         </div>
     </nav>
+
     <div class="container">
         <h3 class="main-title mb-4">QUẢN LÝ HỒ SƠ XE</h3>
 
@@ -134,12 +127,10 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="col-12 mt-4">
-                    <h6 class="fw-bold text-secondary">Lịch bảo trì & Giấy tờ (10 Mục)</h6>
                     <div class="row g-3 mb-4">
                         <div class="col-12">
-                            <h6 class="fw-bold text-secondary"><i class="fas fa-tools me-2"></i>Lịch bảo trì & Giấy tờ</h6>
+                            <h6 class="fw-bold text-secondary"><i class="fas fa-note-sticky"></i> Giấy tờ</h6>
                         </div>
 
                         <div class="col-md-4">
@@ -153,39 +144,47 @@
                         </div>
 
                         <div class="col-md-4">
-                            <label class="form-label small fw-semibold text-secondary">Bảo hiểm vật chất xe</label>
+                            <label class="form-label small fw-bold text-danger">Bảo hiểm vật chất xe</label>
                             <input type="date" id="e-insurance-vatchat" class="form-control">
                         </div>
 
                         <div class="col-md-4">
-                            <label class="form-label small fw-semibold text-secondary">Bảo hiểm bắt buộc (TNDS)</label>
+                            <label class="form-label small fw-bold text-danger">Bảo hiểm bắt buộc (TNDS)</label>
                             <input type="date" id="e-insurance-batbuoc" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 mt-4">
+                    <div class="row g-3 mb-4">
+                        <div class="col-12">
+                            <h6 class="fw-bold text-secondary"><i class="fas fa-tools me-2"></i> Bảo trì / Bảo dưỡng</h6>
                         </div>
 
                         <div class="col-md-4">
-                            <label class="form-label small fw-semibold text-secondary">Hạn Thay dầu</label>
+                            <label class="form-label small fw-bold text-warning">Hạn Thay dầu</label>
                             <input type="date" id="e-oil" class="form-control">
                         </div>
 
                         <div class="col-md-4">
-                            <label class="form-label small fw-semibold text-secondary">Hạn Lọc gió/nhớt</label>
+                            <label class="form-label small fw-bold text-warning">Hạn Lọc gió/nhớt</label>
                             <input type="date" id="e-filter" class="form-control">
                         </div>
 
                         <div class="col-md-4">
-                            <label class="form-label small fw-semibold text-secondary">Hạn Đảo lốp</label>
+                            <label class="form-label small fw-bold text-warning">Hạn Đảo lốp</label>
                             <input type="date" id="e-tire" class="form-control">
                         </div>
 
                         <div class="col-md-4">
-                            <label class="form-label small fw-semibold text-secondary">Bảo dưỡng phanh</label>
+                            <label class="form-label small fw-bold text-warning">Bảo dưỡng phanh</label>
                             <input type="date" id="e-brake" class="form-control">
                         </div>
 
                         <div class="col-md-4">
-                            <label class="form-label small fw-semibold text-secondary">Vệ sinh máy lạnh</label>
+                            <label class="form-label small fw-bold text-warning">Vệ sinh máy lạnh</label>
                             <input type="date" id="e-aircon" class="form-control">
                         </div>
+                        <label class="form-label small fw-semibold text-primary">Hạng mục bảo dưỡng tự chọn khác</label>
                     </div>
                 </div>
                 <div class="row g-3 mb-4 pt-3 border-top">
@@ -228,81 +227,65 @@
             </div>
         </form>
     </div>
+
     <script src="script.js"></script>
     <script>
         const user = checkAuth();
         const carId = new URLSearchParams(window.location.search).get('id');
         
-        function previewImg(input) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    document.getElementById('preview').src = e.target.result;
-                };
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-        
-        async function fetchCarDetail() {
-            if (!carId) return;
-            try {
-                const res = await fetch(getUrl(`users/${user}/cars/${carId}`));
-                const c = await res.json();
-                if (c) {
-                    document.getElementById('e-brand').value = c.brand || '';
-                    document.getElementById('e-name').value = c.name || '';
-                    document.getElementById('e-plate').value = c.plate || '';
-                    document.getElementById('e-fuel').value = c.fuel || 'Xăng';
-                    document.getElementById('e-km').value = c.km || '';
-                    document.getElementById('e-driver').value = c.driver || '';
-                    document.getElementById('e-license-rank').value = c.licenseRank || 'B1';
-                    document.getElementById('e-phone').value = c.phone || '';
-                    document.getElementById('e-registry').value = c.registry || '';
-                    document.getElementById('e-insurance').value = c.insurance || '';
-                    document.getElementById('e-insurance-vatchat').value = c.insuranceVatchat || '';
-                    document.getElementById('e-insurance-batbuoc').value = c.insuranceBatbuoc || '';
-                    document.getElementById('e-oil').value = c.oil || '';
-                    document.getElementById('e-filter').value = c.filter || '';
-                    document.getElementById('e-tire').value = c.tire || '';
-                    document.getElementById('e-brake').value = c.brake || '';
-                    document.getElementById('e-aircon').value = c.aircon || '';
-                    document.getElementById('e-license-expiry').value = c.licenseExpiry || '';
-                    document.getElementById('e-note').value = c.note || '';
-                    if (c.img) document.getElementById('preview').src = c.img;
-                    
-                    // --- ĐÃ THÊM: ĐỔ DỮ LIỆU CUSTOM NGƯỢC LÊN FORM KHI TẢI LẠI TRANG ---
-                    if (document.getElementById('custom1_label')) {
-                        document.getElementById('custom1_label').value = c.custom1_label || '';
-                    }
-                    if (document.getElementById('custom1_date')) {
-                        document.getElementById('custom1_date').value = c.custom1_date || '';
-                    }
+        // 1. Logic ĐỔ DỮ LIỆU
+    async function fetchCarDetail() {
+        if (!carId) return;
+        try {
+            const res = await fetch(getUrl(`users/${user}/cars/${carId}`));
+            const c = await res.json();
+            if (!c) return;
 
-                    if (document.getElementById('custom2_label')) {
-                        document.getElementById('custom2_label').value = c.custom2_label || '';
-                    }
-                    if (document.getElementById('custom2_date')) {
-                        document.getElementById('custom2_date').value = c.custom2_date || '';
-                    }
+            // Đối tượng chứa dữ liệu để đối chiếu
+            const map = {
+                'e-brand': c.brand, 'e-name': c.name, 'e-plate': c.plate, 'e-fuel': c.fuel,
+                'e-km': c.km, 'e-driver': c.driver, 'e-license-rank': c.licenseRank,
+                'e-phone': c.phone, 'e-registry': c.registry, 'e-license-expiry': c.licenseExpiry,
+                'e-insurance-vatchat': c.insuranceVatchat, 'e-insurance-batbuoc': c.insuranceBatbuoc,
+                'e-oil': c.oil, 'e-filter': c.filter, 'e-tire': c.tire, 'e-brake': c.brake,
+                'e-aircon': c.aircon, 'custom1_label': c.custom1_label, 'custom1_date': c.custom1_date,
+                'custom2_label': c.custom2_label, 'custom2_date': c.custom2_date,
+                'custom3_label': c.custom3_label, 'custom3_date': c.custom3_date, 'e-note': c.note
+            };
 
-                    if (document.getElementById('custom3_label')) {
-                        document.getElementById('custom3_label').value = c.custom3_label || '';
-                    }
-                    if (document.getElementById('custom3_date')) {
-                        document.getElementById('custom3_date').value = c.custom3_date || '';
-                    }
+            // VÒNG LẶP ĐỔ DỮ LIỆU VÀO CÁC Ô INPUT
+            for (let id in map) {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.value = map[id] || ''; // Gán giá trị hoặc để trống nếu không có dữ liệu
                 }
-            } catch (err) {
-                console.error("Lỗi khi tải dữ liệu xe:", err);
+            }
+
+            // Cập nhật ảnh đại diện nếu có
+            if (c.img) {
+                document.getElementById('preview').src = c.img;
+            }
+
+        } catch (err) { 
+            console.error("Lỗi khi tải dữ liệu từ Firebase:", err); 
+        }
+    }
+        function handleSelectChange(selectElement, inputId) {
+            const inputField = document.getElementById(inputId);
+            if (!inputField) return;
+
+            if (selectElement.value === "other") {
+                inputField.classList.remove('d-none');
+                inputField.value = "";
+                inputField.focus();
+            } else {
+                inputField.classList.add('d-none');
+                inputField.value = selectElement.value;
             }
         }
-        
-        // Gọi hàm tải dữ liệu ban đầu
-        fetchCarDetail();
-
+        // 2. Logic LƯU DỮ LIỆU
         document.getElementById('edit-form').onsubmit = async (e) => {
             e.preventDefault();
-            
             const data = {
                 brand: document.getElementById('e-brand').value,
                 name: document.getElementById('e-name').value,
@@ -313,7 +296,7 @@
                 licenseRank: document.getElementById('e-license-rank').value,
                 phone: document.getElementById('e-phone').value,
                 registry: document.getElementById('e-registry').value,
-                insurance: document.getElementById('e-insurance').value,
+                licenseExpiry: document.getElementById('e-license-expiry').value,
                 insuranceVatchat: document.getElementById('e-insurance-vatchat').value,
                 insuranceBatbuoc: document.getElementById('e-insurance-batbuoc').value,
                 oil: document.getElementById('e-oil').value,
@@ -321,19 +304,14 @@
                 tire: document.getElementById('e-tire').value,
                 brake: document.getElementById('e-brake').value,
                 aircon: document.getElementById('e-aircon').value,
-                licenseExpiry: document.getElementById('e-license-expiry').value,
-                img: document.getElementById('preview').src, // Base64
-                
-                // 3 Hạng mục tùy chọn thêm (Custom choices)
-                custom1_label: document.getElementById('custom1_label').value.trim(),
+                custom1_label: document.getElementById('custom1_label').value,
                 custom1_date: document.getElementById('custom1_date').value,
-                custom2_label: document.getElementById('custom2_label').value.trim(),
+                custom2_label: document.getElementById('custom2_label').value,
                 custom2_date: document.getElementById('custom2_date').value,
-                custom3_label: document.getElementById('custom3_label').value.trim(),
+                custom3_label: document.getElementById('custom3_label').value,
                 custom3_date: document.getElementById('custom3_date').value,
-                
-                // Ghi chú
-                note: document.getElementById('e-note') ? document.getElementById('e-note').value : document.getElementById('note').value
+                note: document.getElementById('e-note').value,
+                img: document.getElementById('preview').src
             };
 
             try {
@@ -341,11 +319,9 @@
                     method: 'PATCH',
                     body: JSON.stringify(data)
                 });
-                alert("Cập nhật hồ sơ xe thành công!");
+                alert("Cập nhật thành công!");
                 window.location.href = 'list.html';
-            } catch (err) {
-                alert("Lỗi khi lưu dữ liệu. Vui lòng thử lại!");
-            }
+            } catch (err) { alert("Lỗi lưu!"); }
         };
     </script>
 </body>
