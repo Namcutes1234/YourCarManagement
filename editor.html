@@ -175,12 +175,12 @@
                         </div>
 
                         <div class="col-md-4">
-                            <label class="form-label small fw-bold text-warning">Hạn Lọc gió/nhớt</label>
+                            <label class="form-label small fw-bold text-warning">Hạn Lọc nhớt</label>
                             <input type="date" id="e-filter" class="form-control">
                         </div>
 
                         <div class="col-md-4">
-                            <label class="form-label small fw-bold text-warning">Hạn Đảo lốp</label>
+                            <label class="form-label small fw-bold text-warning">Bảo dưỡng củ đề máy pháp</label>
                             <input type="date" id="e-tire" class="form-control">
                         </div>
 
@@ -192,6 +192,10 @@
                         <div class="col-md-4">
                             <label class="form-label small fw-bold text-warning">Vệ sinh máy lạnh</label>
                             <input type="date" id="e-aircon" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small fw-bold text-warning">Bơm mỡ</label>
+                            <input type="date" id="e-bommo" class="form-control">
                         </div>
                     </div>
                 </div>
@@ -256,7 +260,7 @@
                 'e-phone': c.phone, 'e-registry': c.registry, 'e-license-expiry': c.licenseExpiry,
                 'e-insurance-vatchat': c.insuranceVatchat, 'e-insurance-batbuoc': c.insuranceBatbuoc,
                 'e-dangky': c.dangky,'e-giay-nganhang': c.giayNganhang,
-                'e-oil': c.oil, 'e-filter': c.filter, 'e-tire': c.tire, 'e-brake': c.brake,
+                'e-oil': c.oil, 'e-filter': c.filter, 'e-tire': c.tire, 'e-brake': c.brake,'e-bommo': c.bommo,
                 'e-aircon': c.aircon, 'custom1_label': c.custom1_label, 'custom1_date': c.custom1_date,
                 'custom2_label': c.custom2_label, 'custom2_date': c.custom2_date,
                 'custom3_label': c.custom3_label, 'custom3_date': c.custom3_date, 'e-note': c.note
@@ -315,6 +319,7 @@
                 tire: document.getElementById('e-tire').value,
                 brake: document.getElementById('e-brake').value,
                 aircon: document.getElementById('e-aircon').value,
+                bommo: document.getElementById('e-bommo').value,
                 custom1_label: document.getElementById('custom1_label').value,
                 custom1_date: document.getElementById('custom1_date').value,
                 custom2_label: document.getElementById('custom2_label').value,
