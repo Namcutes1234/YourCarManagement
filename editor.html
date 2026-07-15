@@ -239,50 +239,54 @@
             </div>
         </form>
     </div>
-
+    <footer class="bg-white border-top py-3 text-center mt-auto">
+        <div class="container">
+            <p class="mb-0">© 2026 <strong>YourCarManagement</strong>. Toàn bộ dữ liệu được đồng bộ Cloud.</p>
+        </div>
+    </footer>
     <script src="script.js"></script>
     <script>
         const user = checkAuth();
         const carId = new URLSearchParams(window.location.search).get('id');
         
         // 1. Logic ĐỔ DỮ LIỆU
-    async function fetchCarDetail() {
-        if (!carId) return;
-        try {
-            const res = await fetch(getUrl(`users/${user}/cars/${carId}`));
-            const c = await res.json();
-            if (!c) return;
+        async function fetchCarDetail() {
+            if (!carId) return;
+            try {
+                const res = await fetch(getUrl(`users/${user}/cars/${carId}`));
+                const c = await res.json();
+                if (!c) return;
 
-            // Đối tượng chứa dữ liệu để đối chiếu
-            const map = {
-                'e-brand': c.brand, 'e-name': c.name, 'e-plate': c.plate, 'e-fuel': c.fuel,
-                'e-km': c.km, 'e-driver': c.driver, 'e-license-rank': c.licenseRank,
-                'e-phone': c.phone, 'e-registry': c.registry, 'e-license-expiry': c.licenseExpiry,
-                'e-insurance-vatchat': c.insuranceVatchat, 'e-insurance-batbuoc': c.insuranceBatbuoc,
-                'e-dangky': c.dangky,'e-giay-nganhang': c.giayNganhang,
-                'e-oil': c.oil, 'e-filter': c.filter, 'e-tire': c.tire, 'e-brake': c.brake,'e-bommo': c.bommo,
-                'e-aircon': c.aircon, 'custom1_label': c.custom1_label, 'custom1_date': c.custom1_date,
-                'custom2_label': c.custom2_label, 'custom2_date': c.custom2_date,
-                'custom3_label': c.custom3_label, 'custom3_date': c.custom3_date, 'e-note': c.note
-            };
+                // Đối tượng chứa dữ liệu để đối chiếu
+                const map = {
+                    'e-brand': c.brand, 'e-name': c.name, 'e-plate': c.plate, 'e-fuel': c.fuel,
+                    'e-km': c.km, 'e-driver': c.driver, 'e-license-rank': c.licenseRank,
+                    'e-phone': c.phone, 'e-registry': c.registry, 'e-license-expiry': c.licenseExpiry,
+                    'e-insurance-vatchat': c.insuranceVatchat, 'e-insurance-batbuoc': c.insuranceBatbuoc,
+                    'e-dangky': c.dangky,'e-giay-nganhang': c.giayNganhang,
+                    'e-oil': c.oil, 'e-filter': c.filter, 'e-tire': c.tire, 'e-brake': c.brake,'e-bommo': c.bommo,
+                    'e-aircon': c.aircon, 'custom1_label': c.custom1_label, 'custom1_date': c.custom1_date,
+                    'custom2_label': c.custom2_label, 'custom2_date': c.custom2_date,
+                    'custom3_label': c.custom3_label, 'custom3_date': c.custom3_date, 'e-note': c.note
+                };
 
-            // VÒNG LẶP ĐỔ DỮ LIỆU VÀO CÁC Ô INPUT
-            for (let id in map) {
-                const el = document.getElementById(id);
-                if (el) {
-                    el.value = map[id] || ''; // Gán giá trị hoặc để trống nếu không có dữ liệu
+                // VÒNG LẶP ĐỔ DỮ LIỆU VÀO CÁC Ô INPUT
+                for (let id in map) {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        el.value = map[id] || ''; // Gán giá trị hoặc để trống nếu không có dữ liệu
+                    }
                 }
-            }
 
-            // Cập nhật ảnh đại diện nếu có
-            if (c.img) {
-                document.getElementById('preview').src = c.img;
-            }
+                // Cập nhật ảnh đại diện nếu có
+                if (c.img) {
+                    document.getElementById('preview').src = c.img;
+                }
 
-        } catch (err) { 
-            console.error("Lỗi khi tải dữ liệu từ Firebase:", err); 
+            } catch (err) { 
+                console.error("Lỗi khi tải dữ liệu từ Firebase:", err); 
+            }
         }
-    }
         function handleSelectChange(selectElement, inputId) {
             const inputField = document.getElementById(inputId);
             if (!inputField) return;
@@ -296,10 +300,47 @@
                 inputField.value = selectElement.value;
             }
         }
-        // 2. Logic LƯU DỮ LIỆU
+        // 2. Logic LƯU DỮ LIỆU CÓ LỊCH SỬ
+        // Biến lưu trữ dữ liệu cũ để đối chiếu
+        let oldData = {};
+
+        // Cập nhật hàm fetchCarDetail để lưu lại oldData
+        async function fetchCarDetail() {
+            if (!carId) return;
+            try {
+                const res = await fetch(getUrl(`users/${user}/cars/${carId}`));
+                const c = await res.json();
+                if (!c) return;
+                
+                oldData = c; // Lưu vào biến toàn cục để so sánh sau này
+
+                const map = {
+                    'e-brand': c.brand, 'e-name': c.name, 'e-plate': c.plate, 'e-fuel': c.fuel,
+                    'e-km': c.km, 'e-driver': c.driver, 'e-license-rank': c.licenseRank,
+                    'e-phone': c.phone, 'e-registry': c.registry, 'e-license-expiry': c.licenseExpiry,
+                    'e-insurance-vatchat': c.insuranceVatchat, 'e-insurance-batbuoc': c.insuranceBatbuoc,
+                    'e-dangky': c.dangky,'e-giay-nganhang': c.giayNganhang,
+                    'e-oil': c.oil, 'e-filter': c.filter, 'e-tire': c.tire, 'e-brake': c.brake,'e-bommo': c.bommo,
+                    'e-aircon': c.aircon, 'custom1_label': c.custom1_label, 'custom1_date': c.custom1_date,
+                    'custom2_label': c.custom2_label, 'custom2_date': c.custom2_date,
+                    'custom3_label': c.custom3_label, 'custom3_date': c.custom3_date, 'e-note': c.note
+                };
+
+                for (let id in map) {
+                    const el = document.getElementById(id);
+                    if (el) el.value = map[id] || '';
+                }
+                if (c.img) document.getElementById('preview').src = c.img;
+
+            } catch (err) { console.error(err); }
+        }
+
+        // Hàm xử lý lưu với logic so sánh
         document.getElementById('edit-form').onsubmit = async (e) => {
             e.preventDefault();
-            const data = {
+            
+            // Thu thập dữ liệu từ form
+            const newData = {
                 brand: document.getElementById('e-brand').value,
                 name: document.getElementById('e-name').value,
                 plate: document.getElementById('e-plate').value,
@@ -330,14 +371,34 @@
                 img: document.getElementById('preview').src
             };
 
+            // Tạo object chứa các thay đổi
+            let historyChanges = {};
+            for (let key in newData) {
+                if (newData[key] !== oldData[key]) {
+                    historyChanges[key] = { old: oldData[key] || "", new: newData[key] };
+                }
+            }
+
             try {
+                // 1. Cập nhật dữ liệu chính
                 await fetch(getUrl(`users/${user}/cars/${carId}`), {
                     method: 'PATCH',
-                    body: JSON.stringify(data)
+                    body: JSON.stringify(newData)
                 });
+
+                // 2. Chỉ lưu lịch sử nếu có thay đổi thực sự
+                if (Object.keys(historyChanges).length > 0) {
+                    await fetch(getUrl(`users/${user}/cars/${carId}/history/${Date.now()}`), {
+                        method: 'PUT',
+                        body: JSON.stringify(historyChanges)
+                    });
+                }
+
                 alert("Cập nhật thành công!");
                 window.location.href = 'list.html';
-            } catch (err) { alert("Lỗi lưu!"); }
+            } catch (err) { 
+                alert("Lỗi lưu dữ liệu!"); 
+            }
         };
     </script>
 </body>

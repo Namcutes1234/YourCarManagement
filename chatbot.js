@@ -1,7 +1,7 @@
 // ==========================================
 // CẤU HÌNH HỆ THỐNG API & KHỞI TẠO BIẾN
 // ==========================================
-const GROQ_API_KEY = "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";
+const GROQ_API_KEY = "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";
 const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
 
 const user = sessionStorage.getItem('logged_in_user');
@@ -186,7 +186,6 @@ async function callGroq(userMsg) {
     const cleanKey = GROQ_API_KEY.trim();
 
     const systemPrompt = `Bạn là một trợ lý ảo thông minh, nhiệt tình và cực kỳ am hiểu về xe của ứng dụng YourCarManagement.
-Hôm nay là ngày 07/07/2026.
 
 Nhiệm vụ của bạn là hỗ trợ người dùng quản lý xe. Khi người dùng hỏi về tình trạng xe, tuyệt đối KHÔNG liệt kê một danh sách dài thô kệch, khô khan. Hãy tuân thủ phong cách trả lời sau:
 1. Đón chào bằng giọng điệu hào hứng, thân thiện kèm emoji phù hợp (Ví dụ: 🚗, ✨, 🛠️).

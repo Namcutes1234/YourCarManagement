@@ -5,116 +5,21 @@
     <title>YourCarManagement - List</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Thêm style cho Modal -->
     <style>
-        .navbar {
-            padding: 0.8rem 0 !important;
-        }
-        .navbar-brand { font-size: 1.2rem !important; }
-        .custom-nav .nav-link:hover {
-            color: #ffc107 !important;
-            transform: translateY(-1px);
-        }
-        .custom-nav i {
-            font-size: 14px;
-        }
-        @media (max-width: 768px) {
-            .container {
-                padding-left: 15px !important;
-                padding-right: 15px !important;
-            }
-            .content-wrapper .d-flex {
-                flex-direction: column;
-                align-items: flex-start !important;
-                gap: 12px;
-            }
-
-            .content-wrapper h4 {
-                font-size: 18px !important;
-                margin-bottom: 0 !important;
-            }
-
-            .content-wrapper .btn-primary {
-                width: 100%;
-                padding: 10px !important;
-                font-size: 14px;
-            }
-
-            .custom-nav {
-                width: 100%;
-                padding-top: 10px;
-            }
-
-            .custom-nav .nav-item {
-                width: 100%;
-                text-align: left;
-            }
-
-            .custom-nav .nav-link {
-                padding: 10px 15px !important;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            }
-
-            .custom-nav .nav-item:last-child .nav-link {
-                border-bottom: none;
-            }
-
-            .custom-nav .btn-outline-light {
-                width: 100%;
-                margin-top: 10px !important;
-                padding: 10px !important;
-                border-radius: 8px !important;
-            }
-
-            #car-list .col-md-4, 
-            #car-list .col-sm-6,
-            #car-list [class*="col-"] {
-                width: 100% !important;
-                max-width: 100% !important;
-            }
-
-            .car-card {
-                display: flex;
-                flex-direction: column;
-                margin-bottom: 16px !important;
-                border-radius: 12px !important;
-                overflow: hidden;
-            }
-
-            .car-card img {
-                width: 100% !important;
-                height: 180px !important;
-                object-fit: cover;
-            }
-
-            .car-card-body {
-                padding: 15px !important;
-            }
-
-            .car-actions {
-                display: flex;
-                gap: 8px;
-                margin-top: 12px;
-            }
-
-            .car-actions .btn {
-                flex: 1;
-                padding: 8px !important;
-                font-size: 13px !important;
-            }
-
-            .modal-dialog {
-                margin: 15px;
-            }
-            
-            .modal-content {
-                border-radius: 12px;
-            }
-            
-            footer p {
-                font-size: 12px;
-            }
-        }
-</style>
+        .navbar { padding: 0.8rem 0 !important; }
+        .custom-nav .nav-link:hover { color: #ffc107 !important; transform: translateY(-1px); }
+        body { background-color: #fff; font-family: 'Segoe UI', sans-serif; color: #333; }
+        .main-title { color: #0d6efd; font-weight: 700; text-align: center; margin-top: 20px; text-transform: uppercase; }
+        .section-label { font-size: 14px; color: #666; margin-bottom: 8px; font-weight: 500; }
+        .form-label { font-size: 14px; margin-bottom: 5px; }
+        .form-control, .form-select { border-radius: 6px; border: 1px solid #dee2e6; padding: 8px 12px; font-size: 14px; }
+        .img-preview { width: 100%; height: 280px; border: 1px solid #ddd; border-radius: 10px; object-fit: cover; background: #f9f9f9; }
+        .btn-save { background-color: #0d6efd; border: none; padding: 10px 40px; border-radius: 6px; font-weight: 600; transition: 0.3s; }
+        .btn-cancel { background-color: #f8f9fa; border: 1px solid #ddd; padding: 10px 30px; border-radius: 6px; text-decoration: none; color: #333; }
+        .car-actions { display: flex; gap: 8px; margin-top: 10px; }
+        .list-group-item { border-left: 4px solid #0d6efd; }
+    </style>
 </head>
 <body onload="loadCars()">
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
@@ -156,30 +61,37 @@
             </div>
         </div>
     </nav>
-    <div class="content-wrapper container mt-4">
+
+    <div class="container mt-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h4><i class="fas fa-list-ul me-2 text-primary"></i>Danh sách xe của tôi</h4>
             <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addModal">+ Thêm xe mới</button>
         </div>
-
-        <div id="car-list" class="row">
-            </div>
+        <div id="car-list" class="row"></div>
     </div>
-    <div class="modal fade" id="addModal" tabindex="-1">
-        <div class="modal-dialog">
+
+    <!-- Modal Lịch sử -->
+    <div class="modal fade" id="historyModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header"><h5 class="modal-title">Thêm xe mới</h5></div>
-                <div class="modal-body">
-                    <input type="text" id="b" class="form-control mb-2" placeholder="Hãng xe (Vd: Honda)">
-                    <input type="text" id="n" class="form-control mb-2" placeholder="Tên xe (Vd: SH)">
-                    <input type="text" id="p" class="form-control mb-2" placeholder="Biển số">
-                    <input type="number" id="k" class="form-control mb-2" placeholder="Số KM (ODO)">
+                <div class="modal-header">
+                    <h5 class="modal-title">Nhật ký thay đổi</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-footer">
-                    <button onclick="addCar()" class="btn btn-primary w-100">Đồng bộ lên Cloud</button>
-                </div>
+                <div class="modal-body" id="history-content">Đang tải...</div>
             </div>
         </div>
+    </div>
+
+    <!-- Modal Thêm xe -->
+    <div class="modal fade" id="addModal" tabindex="-1">
+        <div class="modal-dialog"><div class="modal-content"><div class="modal-body">
+            <h4><i class="fas fa-plus"></i> Thêm xe mới</h4>
+            <input type="text" id="b" class="form-control mb-2" placeholder="Hãng xe">
+            <input type="text" id="n" class="form-control mb-2" placeholder="Tên xe">
+            <input type="text" id="p" class="form-control mb-2" placeholder="Biển số">
+            <button onclick="addCar()" class="btn btn-primary w-100">Đồng bộ lên Cloud</button>
+        </div></div></div>
     </div>
     <footer class="bg-white border-top py-3 text-center mt-auto">
         <div class="container">
@@ -188,36 +100,267 @@
     </footer>
     <script src="script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script>
         const user = checkAuth();
-        async function addCar() {
-            const car = { brand: document.getElementById('b').value, name: document.getElementById('n').value, plate: document.getElementById('p').value, km: document.getElementById('k').value };
-            await fetch(getUrl(`users/${user}/cars`), { method: 'POST', body: JSON.stringify(car) });
-            location.reload();
-        }
+        let historyModalInstance = null;
+
         async function loadCars() {
             const res = await fetch(getUrl(`users/${user}/cars`));
             const data = await res.json();
             const list = document.getElementById('car-list');
-            if(!data) return list.innerHTML = "<p class='text-center text-muted'>Empty...</p>";
+            if(!data) return list.innerHTML = "<p class='text-center text-muted'>Chưa có xe nào...</p>";
+            
+            list.innerHTML = '';
             Object.entries(data).forEach(([id, c]) => {
                 list.innerHTML += `
                     <div class="col-md-4 mb-3">
                         <div class="card shadow-sm border-0">
                             <div class="card-body">
-                                <h6 class="fw-bold text-primary">${c.brand} ${c.name}</h6>
-                                <p class="small mb-1">Biển: ${c.plate} | KM: ${c.km}</p>
-                                <div class="d-flex gap-2">
-                                    <button class="btn btn-sm btn-outline-danger py-0" onclick="del('${id}')">Xóa</button>
+                                <h6 class="fw-bold text-primary">${c.brand || ''} ${c.name || ''}</h6>
+                                <p class="small mb-1">Biển: ${c.plate || 'N/A'} | KM: ${c.km || 0}</p>
+                                <div class="car-actions">
+                                    <button class="btn btn-sm btn-outline-info py-0" onclick="showHistory('${id}')"><i class="fas fa-history"></i></button>
+                                    <button class="btn btn-sm btn-outline-success py-0" onclick="exportFullCarData('${id}')" title="Xuất toàn bộ thông tin"><i class="fas fa-file-export"></i></button>
                                     <a href="editor.html?id=${id}" class="btn btn-sm btn-outline-warning py-0">Sửa</a>
+                                    <button class="btn btn-sm btn-outline-danger py-0" onclick="del('${id}')">Xóa</button>
                                 </div>
                             </div>
                         </div>
                     </div>`;
             });
         }
+
+        async function showHistory(carId) {
+            const modalEl = document.getElementById('historyModal');
+            if (!historyModalInstance) {
+                historyModalInstance = new bootstrap.Modal(modalEl);
+            }
+            
+            const content = document.getElementById('history-content');
+            content.innerHTML = "Đang tải...";
+            historyModalInstance.show();
+
+            try {
+                const res = await fetch(getUrl(`users/${user}/cars/${carId}/history`));
+                const historyData = await res.json();
+                
+                if (!historyData) {
+                    content.innerHTML = "<p class='text-muted'>Chưa có lịch sử thay đổi.</p>";
+                    return;
+                }
+
+                const historyList = Object.entries(historyData).reverse();
+                let html = '<div class="list-group">';
+                
+                historyList.forEach(([timestamp, changes]) => {
+                    const time = new Date(parseInt(timestamp)).toLocaleString('vi-VN');
+                    
+                    let changesHtml = '';
+                    for (let key in changes) {
+                        if (changes[key].old !== changes[key].new) {
+                            changesHtml += `
+                                <div class="small border-bottom py-1">
+                                    <strong>${key.toUpperCase()}:</strong> 
+                                    <span class="text-danger">${changes[key].old || 'Trống'}</span> 
+                                    <i class="fas fa-arrow-right mx-1 text-muted"></i> 
+                                    <span class="text-success fw-bold">${changes[key].new}</span>
+                                </div>`;
+                        }
+                    }
+
+                    html += `
+                        <div class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold text-primary">${time}</span>
+                                <div>
+                                    <button class="btn btn-sm btn-outline-success py-0 me-2" onclick="exportHistoryToExcel('${carId}')" title="Xuất Excel">
+                                        <i class="fas fa-file-excel"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger py-0" onclick="deleteHistoryItem('${carId}', '${timestamp}')">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            ${changesHtml || '<p class="small text-muted mb-0">Không có thay đổi dữ liệu chi tiết.</p>'}
+                        </div>`;
+                });
+                
+                content.innerHTML = html + '</div>';
+            } catch (err) {
+                content.innerHTML = "<p class='text-danger'>Lỗi khi tải lịch sử.</p>";
+            }
+        }
+
+        async function deleteHistoryItem(carId, timestamp) {
+            if (!confirm("Bạn có chắc chắn muốn xóa bản ghi lịch sử này không?")) return;
+
+            try {
+                const res = await fetch(getUrl(`users/${user}/cars/${carId}/history/${timestamp}`), {
+                    method: 'DELETE'
+                });
+
+                if (res.ok) {
+                    alert("Đã xóa bản ghi!");
+                    showHistory(carId); 
+                } else {
+                    throw new Error("Xóa thất bại");
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Lỗi khi xóa bản ghi!");
+            }
+        }
+
+        async function exportHistoryToExcel(carId) {
+            try {
+                const res = await fetch(getUrl(`users/${user}/cars/${carId}/history`));
+                const historyData = await res.json();
+                
+                if (!historyData) return alert("Không có dữ liệu để xuất!");
+
+                // Danh sách ánh xạ các ID trong form sang tên hiển thị trong Excel
+                const fieldMap = {
+                    // Thông tin cơ bản
+                    'brand': 'Hãng xe',
+                    'name': 'Tên xe',
+                    'plate': 'Biển số',
+                    'km': 'Số KM',
+                    'fuel': 'Nhiên liệu',
+                    // Tài xế
+                    'driver': 'Tài xế',
+                    'license_rank': 'Hạng bằng',
+                    'phone': 'SĐT Tài xế',
+                    // Giấy tờ
+                    'registry': 'Hạn Đăng kiểm',
+                    'license_expiry': 'Hạn Bằng lái',
+                    'insurance_vatchat': 'BH Vật chất',
+                    'insurance_batbuoc': 'BH TNDS',
+                    'dangky': 'Hạn Đăng ký',
+                    'giay_nganhang': 'Hạn Giấy ngân hàng',
+                    // Bảo trì
+                    'oil': 'Hạn Thay dầu',
+                    'filter': 'Hạn Lọc nhớt',
+                    'tire': 'Bảo dưỡng củ đề',
+                    'brake': 'Bảo dưỡng phanh',
+                    'aircon': 'Vệ sinh máy lạnh',
+                    'bommo': 'Bơm mỡ',
+                    // Tùy chỉnh
+                    'custom1_label': 'Hạng mục 1',
+                    'custom1_date': 'Ngày hạng mục 1',
+                    'custom2_label': 'Hạng mục 2',
+                    'custom2_date': 'Ngày hạng mục 2',
+                    'custom3_label': 'Hạng mục 3',
+                    'custom3_date': 'Ngày hạng mục 3',
+                    'note': 'Ghi chú'
+                };
+
+                const data = Object.entries(historyData).map(([timestamp, changes]) => {
+                    let row = { "Thời gian cập nhật": new Date(parseInt(timestamp)).toLocaleString('vi-VN') };
+                    
+                    for (let key in changes) {
+                        // Chuyển đổi ID (ví dụ: e-oil) thành key để khớp với fieldMap nếu cần
+                        // Nếu dữ liệu lưu dưới dạng 'e-oil', hãy đảm bảo key ở đây khớp
+                        const cleanKey = key.replace('e-', ''); 
+                        const displayName = fieldMap[cleanKey] || key.toUpperCase();
+                        
+                        row[displayName] = `${changes[key].old || 'Trống'} -> ${changes[key].new}`;
+                    }
+                    return row;
+                });
+
+                const ws = XLSX.utils.json_to_sheet(data);
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, "LichSu");
+                XLSX.writeFile(wb, `LichSu_${carId}.xlsx`);
+            } catch (err) {
+                console.error(err);
+                alert("Lỗi khi xuất file!");
+            }
+    }
+    async function exportFullCarData(carId) {
+        try {
+            const res = await fetch(getUrl(`users/${user}/cars/${carId}`));
+            const carData = await res.json();
+            
+            if (!carData) return alert("Không tìm thấy dữ liệu xe!");
+
+            // Định nghĩa tiêu đề tương ứng với key dữ liệu
+            const fieldMap = {
+                'brand': 'Hãng xe',
+                'name': 'Tên xe',
+                'plate': 'Biển số',
+                'km': 'Số KM',
+                'driver': 'Tài xế',
+                'license_rank': 'Hạng bằng',
+                'phone': 'SĐT Tài xế',
+                'registry': 'Hạn Đăng kiểm',
+                'license_expiry': 'Hạn Bằng lái',
+                'insurance_vatchat': 'BH Vật chất',
+                'insurance_batbuoc': 'BH TNDS',
+                'dangky': 'Hạn Đăng ký',
+                'giay_nganhang': 'Hạn Giấy ngân hàng',
+                'oil': 'Hạn Thay dầu',
+                'filter': 'Hạn Lọc nhớt',
+                'tire': 'Bảo dưỡng củ đề',
+                'brake': 'Bảo dưỡng phanh',
+                'aircon': 'Vệ sinh máy lạnh',
+                'bommo': 'Bơm mỡ',
+                'custom1_label': 'Nhãn 1',
+                'custom1_date': 'Ngày 1',
+                'custom2_label': 'Nhãn 2',
+                'custom2_date': 'Ngày 2',
+                'custom3_label': 'Nhãn 3',
+                'custom3_date': 'Ngày 3'
+            };
+
+            // Chuyển dữ liệu sang mảng các object có dạng {Field: "Tên", Value: "Giá trị"}
+            let rows = [];
+            for (let key in fieldMap) {
+                if (carData[key] !== undefined) {
+                    rows.push({
+                        "Thông tin": fieldMap[key],
+                        "Giá trị": carData[key]
+                    });
+                }
+            }
+
+            // Tạo Sheet từ mảng rows (dữ liệu sẽ trải dài theo chiều dọc)
+            const ws = XLSX.utils.json_to_sheet(rows);
+            
+            // Điều chỉnh độ rộng cột để nhìn đẹp hơn
+            ws['!cols'] = [{ wch: 20 }, { wch: 30 }];
+
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "ThongTinXe");
+            
+            XLSX.writeFile(wb, `ThongTin_${carData.name || 'Xe'}.xlsx`);
+        } catch (err) {
+            console.error(err);
+            alert("Lỗi khi xuất dữ liệu!");
+        }
+    }
+        // Cơ chế dọn dẹp để chống "đóng băng" giao diện
+        document.getElementById('historyModal').addEventListener('hidden.bs.modal', function () {
+            document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
+            document.body.classList.remove('modal-open');
+            document.body.style.overflow = '';
+            document.body.style.paddingRight = '';
+        });
+
+        async function addCar() {
+            const car = { 
+                brand: document.getElementById('b').value, 
+                name: document.getElementById('n').value, 
+                plate: document.getElementById('p').value,
+                km: 0 
+            };
+            await fetch(getUrl(`users/${user}/cars`), { method: 'POST', body: JSON.stringify(car) });
+            location.reload();
+        }
+
         async function del(id) {
-            if(confirm("Xóa?")) {
+            if(confirm("Xóa xe này?")) {
                 await fetch(getUrl(`users/${user}/cars/${id}`), { method: 'DELETE' });
                 location.reload();
             }
