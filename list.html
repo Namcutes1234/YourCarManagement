@@ -19,6 +19,7 @@
         .car-actions { display: flex; gap: 8px; margin-top: 10px; }
         .list-group-item { border-left: 4px solid #0d6efd; }
         .car-card-img { width: 100%; height: 160px; object-fit: cover; border-top-left-radius: 6px; border-top-right-radius: 6px; }
+        .car-type-badge { font-size: 13px; padding: 5px 10px; border-radius: 20px; font-weight: 500; display: inline-flex; align-items: center; gap: 5px; }
     </style>
 </head>
 <body onload="loadCars()">
@@ -137,6 +138,19 @@
             }
         }
 
+        // Hàm ánh xạ loại xe sang Icon FontAwesome tương ứng
+        function getCarIcon(type) {
+            if (!type) return '<i class="fas fa-car"></i>';
+            const t = type.toLowerCase();
+            if (t.includes('ô tô') || t.includes('oto') || t.includes('xe hơi')) return '<i class="fas fa-car"></i>';
+            if (t.includes('xe máy điện') || t.includes('máy điện')) return '<i class="fas fa-bolt"></i>';
+            if (t.includes('xe máy') || t.includes('motor') || t.includes('mô tô') || t.includes('wave') || t.includes('exciter')) return '<i class="fas fa-motorcycle"></i>';
+            if (t.includes('xe khách') || t.includes('bus') || t.includes('xe buýt')) return '<i class="fas fa-bus"></i>';
+            if (t.includes('xe tải') || t.includes('truck')) return '<i class="fas fa-truck"></i>';
+            if (t.includes('xe ben') || t.includes('ben')) return '<i class="fas fa-dumpster"></i>';
+            return '<i class="fas fa-car-side"></i>'; // Mặc định cho các loại xe tùy chỉnh khác
+        }
+
         async function loadCars() {
             const res = await fetch(getUrl(`users/${user}/cars`));
             const data = await res.json();
@@ -148,8 +162,10 @@
             list.innerHTML = '';
             Object.entries(data).forEach(([id, c]) => {
                 const imgUrl = c.img || defaultImg;
-                // Nếu c.type có dữ liệu, hiển thị trực tiếp lên badge (ví dụ: "xe ben")
-                const carType = c.type ? `<span class="badge bg-info text-dark ms-2">${c.type}</span>` : '';
+                
+                // Thay thế hiển thị chữ đơn thuần bằng Badge có kèm Icon sinh động
+                const iconHtml = getCarIcon(c.type);
+                const carType = c.type ? `<span class="badge bg-info text-dark ms-2 car-type-badge">${iconHtml} ${c.type}</span>` : '';
 
                 list.innerHTML += `
                     <div class="col-md-4 mb-4">
@@ -385,7 +401,6 @@
         });
 
         async function addCar() {
-            // Lấy loại xe: nếu chọn "Khác" thì lấy giá trị ở ô input tự nhập (ví dụ: "xe ben"), ngược lại lấy giá trị select
             const selectVal = document.getElementById('t').value;
             const finalType = selectVal === 'Khác' 
                 ? (document.getElementById('t-custom').value.trim() || 'Khác') 

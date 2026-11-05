@@ -35,7 +35,7 @@
         .navbar-brand { font-size: 1.2rem !important; }
         footer { font-size: 11px; flex-shrink: 0; color: #6c757d; }
         .alert-container { border-radius: 15px; overflow: hidden; }
-        .type-badge { font-size: 13px; padding: 6px 12px; border-radius: 8px; font-weight: 500; }
+        .type-badge { font-size: 13px; padding: 6px 12px; border-radius: 20px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; }
     </style>
 </head>
 <body onload="initDashboard()">
@@ -153,6 +153,19 @@
             return Math.ceil(timeDiff / (1000 * 3600 * 24));
         }
 
+        // Hàm ánh xạ loại xe sang Icon FontAwesome tương ứng
+        function getCarIcon(type) {
+            if (!type) return '<i class="fas fa-car"></i>';
+            const t = type.toLowerCase();
+            if (t.includes('ô tô') || t.includes('oto') || t.includes('xe hơi')) return '<i class="fas fa-car"></i>';
+            if (t.includes('xe máy điện') || t.includes('máy điện')) return '<i class="fas fa-bolt"></i>';
+            if (t.includes('xe máy') || t.includes('motor') || t.includes('mô tô') || t.includes('wave') || t.includes('exciter')) return '<i class="fas fa-motorcycle"></i>';
+            if (t.includes('xe khách') || t.includes('bus') || t.includes('xe buýt')) return '<i class="fas fa-bus"></i>';
+            if (t.includes('xe tải') || t.includes('truck')) return '<i class="fas fa-truck"></i>';
+            if (t.includes('xe ben') || t.includes('ben')) return '<i class="fas fa-dumpster"></i>';
+            return '<i class="fas fa-car-side"></i>';
+        }
+
         async function initDashboard() {
             try {
                 const res = await fetch(getUrl(`users/${user}/cars`));
@@ -178,9 +191,11 @@
 
                 for (const [typeName, count] of Object.entries(typeCounts)) {
                     const badgeClass = badgeColors[colorIndex % badgeColors.length];
+                    const iconHtml = getCarIcon(typeName);
+                    
                     breakdownContainer.innerHTML += `
                         <span class="badge ${badgeClass} type-badge shadow-sm">
-                            ${typeName}: <strong class="ms-1">${count}</strong>
+                            ${iconHtml} ${typeName}: <strong class="ms-1">${count}</strong>
                         </span>
                     `;
                     colorIndex++;
