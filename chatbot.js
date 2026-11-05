@@ -1,7 +1,7 @@
 // ==========================================
 // CẤU HÌNH HỆ THỐNG API & KHỞI TẠO BIẾN
 // ==========================================
-const GROQ_API_KEY = "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";
+const GROQ_API_KEY = process.env.ENV_GROQ_API_KEY || ""; 
 const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
 
 const user = sessionStorage.getItem('logged_in_user');
