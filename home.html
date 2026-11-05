@@ -32,11 +32,10 @@
         .stat-card { border: none; border-radius: 15px; transition: 0.3s; }
         .stat-card:hover { transform: translateY(-5px); }
         .icon-box { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-        .action-btn { border-radius: 12px; padding: 15px; border: 1.5px solid #eee; background: #fff; transition: 0.3s; text-decoration: none; color: #333; display: block; }
-        .action-btn:hover { border-color: #0d6efd; background: #f0f7ff; color: #0d6efd; }
         .navbar-brand { font-size: 1.2rem !important; }
         footer { font-size: 11px; flex-shrink: 0; color: #6c757d; }
         .alert-container { border-radius: 15px; overflow: hidden; }
+        .type-badge { font-size: 13px; padding: 6px 12px; border-radius: 8px; font-weight: 500; }
     </style>
 </head>
 <body onload="initDashboard()">
@@ -88,10 +87,10 @@
                 <p class="text-secondary small">Chào mừng quay trở lại, đây là trạng thái đội xe của bạn.</p>
             </div>
             
-            <div class="row mb-5">
+            <div class="row mb-4">
                 <!-- Card Tổng số xe -->
                 <div class="col-md-6 mb-3">
-                    <div class="card stat-card shadow-sm">
+                    <div class="card stat-card shadow-sm h-100">
                         <div class="card-body d-flex align-items-center">
                             <div class="icon-box bg-primary text-white me-3"><i class="fas fa-car"></i></div>
                             <div>
@@ -102,9 +101,9 @@
                     </div>
                 </div>
                 
-                <!-- Card Cần xử lý (Hiển thị số xe thực tế gặp vấn đề hạn định) -->
+                <!-- Card Cần xử lý -->
                 <div class="col-md-6 mb-3">
-                    <div class="card stat-card shadow-sm">
+                    <div class="card stat-card shadow-sm h-100">
                         <div class="card-body d-flex align-items-center">
                             <div class="icon-box bg-warning text-white me-3"><i class="fas fa-shield-alt"></i></div>
                             <div>
@@ -112,6 +111,17 @@
                                 <h4 class="fw-bold mb-0" id="need-service">0</h4>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card Phân loại chi tiết các loại xe -->
+            <div class="card stat-card shadow-sm mb-4">
+                <div class="card-body">
+                    <h6 class="fw-bold text-secondary mb-3"><i class="fas fa-chart-pie me-2"></i>Thống kê theo phân loại xe</h6>
+                    <div id="car-types-breakdown" class="d-flex flex-wrap gap-2">
+                        <!-- Dữ liệu phân loại sẽ được render tự động vào đây -->
+                        <span class="text-muted small">Đang tải dữ liệu phân loại...</span>
                     </div>
                 </div>
             </div>
@@ -153,17 +163,44 @@
                 const carsArray = Object.values(data);
                 document.getElementById('total-cars').innerText = carsArray.length;
 
+                // THỐNG KÊ PHÂN LOẠI XE (Ô tô, Xe máy, Xe ben...)
+                const typeCounts = {};
+                carsArray.forEach(car => {
+                    const t = car.type || 'Chưa phân loại';
+                    typeCounts[t] = (typeCounts[t] || 0) + 1;
+                });
+
+                const breakdownContainer = document.getElementById('car-types-breakdown');
+                breakdownContainer.innerHTML = '';
+                
+                const badgeColors = ['bg-primary', 'bg-success', 'bg-danger', 'bg-warning text-dark', 'bg-info text-dark', 'bg-secondary', 'bg-dark'];
+                let colorIndex = 0;
+
+                for (const [typeName, count] of Object.entries(typeCounts)) {
+                    const badgeClass = badgeColors[colorIndex % badgeColors.length];
+                    breakdownContainer.innerHTML += `
+                        <span class="badge ${badgeClass} type-badge shadow-sm">
+                            ${typeName}: <strong class="ms-1">${count}</strong>
+                        </span>
+                    `;
+                    colorIndex++;
+                }
+
+                if (Object.keys(typeCounts).length === 0) {
+                    breakdownContainer.innerHTML = '<span class="text-muted small">Chưa có phương tiện nào trong hệ thống.</span>';
+                }
+
                 // CẤU HÌNH CÁC MỤC QUÉT ALERT
                 const alertConfigs = [
                     { key: 'registry', label: 'Hạn đăng kiểm', threshold: 15 },
                     { key: 'licenseExpiry', label: 'Hạn bằng lái', threshold: 30 },
                     { key: 'insuranceVatchat', label: 'Bảo hiểm vật chất xe', threshold: 15 },
                     { key: 'insuranceBatbuoc', label: 'Bảo hiểm bắt buộc (TNDS)', threshold: 15 },
-                    { key: 'dangky', label: 'Hạn đăng kí', threshold: 15 }, // Sửa: dangky
-                    { key: 'giayNganhang', label: 'Hạn giấy đi đường Ngân Hàng', threshold: 15 }, // Sửa: giayNganhang
+                    { key: 'dangky', label: 'Hạn đăng kí', threshold: 15 },
+                    { key: 'giayNganhang', label: 'Hạn giấy đi đường Ngân Hàng', threshold: 15 },
                     { key: 'oil', label: 'Hạn thay dầu', threshold: 15 },
                     { key: 'filter', label: 'Hạn lọc gió/nhớt', threshold: 15 },
-                    { key: 'tire', label: 'Bảo dưỡng củ đề máy pháp', threshold: 15 },
+                    { key: 'tire', label: 'Bảo dưỡng củ đề máy phát', threshold: 15 },
                     { key: 'brake', label: 'Bảo dưỡng phanh', threshold: 15 },
                     { key: 'aircon', label: 'Vệ sinh máy lạnh', threshold: 15 },
                     { key: 'bommo', label: 'Hạn bơm mỡ', threshold: 15 },
@@ -172,10 +209,10 @@
                     { key: 'custom3', label: 'Tùy chỉnh 3', isCustom: true, threshold: 15 }
                 ];
                 const alertContainer = document.getElementById('alert-box-container');
-                alertContainer.innerHTML = ''; // Xóa thông báo cũ trước khi render mới
+                alertContainer.innerHTML = ''; 
 
                 let needServiceCars = new Set();
-                let allAlerts = []; // Mảng tạm thời để chứa tất cả thông báo trước khi sắp xếp
+                let allAlerts = []; 
 
                 // Duyệt qua từng xe trong hệ thống
                 carsArray.forEach(car => {
@@ -187,50 +224,41 @@
                         let dateValue = "";
                         let labelText = config.label;
 
-                        // Kiểm tra xem mục đang quét là mục cố định hay mục tự gõ (Custom)
                         if (config.isCustom) {
-                            // Lấy tên nhãn do người dùng tự gõ (ví dụ: car["custom1_label"])
                             const customLabel = car[`${config.key}_label`];
-                            // Lấy ngày do người dùng chọn
                             dateValue = car[`${config.key}_date`];
                             
                             if (customLabel && dateValue) {
-                                labelText = customLabel; // Đổi chữ "Tùy chỉnh 1" thành tên người dùng tự gõ
+                                labelText = customLabel; 
                             } else {
-                                return; // Nếu ô này trống (người dùng không nhập) thì bỏ qua không quét
+                                return; 
                             }
                         } else {
-                            // Đối với các mục mặc định hệ thống (đăng kiểm, bảo hiểm...)
                             dateValue = car[config.key];
                         }
                         
-                        // Tiến hành tính toán ngày hạn nếu có dữ liệu ngày
                         if (dateValue) {
                             const daysLeft = calculateDaysLeft(dateValue);
-                            
-                            // Ngưỡng báo tối đa: Hạn bằng lái là 30 ngày, các mục khác (kể cả tự gõ) là 15 ngày
                             const maxThreshold = (config.key === 'licenseExpiry') ? 30 : 15;
 
                             if (daysLeft <= maxThreshold) {
                                 let alertClass = "";
                                 let priority = 3; 
 
-                                // Phân chia màu sắc theo số ngày còn lại
                                 if (daysLeft <= 1) {
-                                    alertClass = "alert-danger";  // Đỏ
+                                    alertClass = "alert-danger"; 
                                     priority = 1;
                                     needServiceCars.add(carId); 
                                 } else if (daysLeft <= 7) {
-                                    alertClass = "alert-warning"; // Vàng
+                                    alertClass = "alert-warning"; 
                                     priority = 2;
                                     needServiceCars.add(carId);
                                 } else {
-                                    alertClass = "alert-success"; // Xanh
+                                    alertClass = "alert-success"; 
                                     priority = 3;
                                     needServiceCars.add(carId);
                                 }
 
-                                // Định dạng chuỗi văn bản hiển thị ra giao diện
                                 let alertText = "";
                                 if (daysLeft > 0) {
                                     alertText = `Xe <strong>${carName}</strong>: Mục <strong>${labelText}</strong> còn <strong>${daysLeft} ngày</strong> (${dateValue}).`;
@@ -258,15 +286,12 @@
                     });
                 });
 
-                // THỰC HIỆN SẮP XẾP: Thứ tự ưu tiên tăng dần (Đỏ 1 -> Vàng 2 -> Xanh 3)
                 allAlerts.sort((a, b) => a.priority - b.priority);
 
-                // Tiến hành render chuỗi HTML đã sắp xếp gọn gàng ra giao diện
                 allAlerts.forEach(alert => {
                     alertContainer.innerHTML += alert.html;
                 });
 
-                // Nếu không có cảnh báo nào, hiện thông báo trống cho đẹp mắt
                 if (allAlerts.length === 0) {
                     alertContainer.innerHTML = `
                         <div class="alert alert-light text-center border shadow-sm" style="border-radius: 10px;">
@@ -275,7 +300,6 @@
                     `;
                 }
 
-                // Cập nhật số lượng xe cần xử lý thực tế lên ô Thống kê (chính là size của Set)
                 document.getElementById('need-service').innerText = needServiceCars.size;
 
             } catch (err) {

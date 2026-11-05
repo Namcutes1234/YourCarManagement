@@ -1,7 +1,7 @@
 // ==========================================
 // CẤU HÌNH HỆ THỐNG API & KHỞI TẠO BIẾN
 // ==========================================
-const GROQ_API_KEY = "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";
+const GROQ_API_KEY = "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";
 const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
 
 const user = sessionStorage.getItem('logged_in_user');
@@ -51,7 +51,7 @@ function showDefaultGreeting() {
 }
 
 /**
- * Vẽ danh sách lịch sử các phiên chat lên Sidebar trái (Màu trắng phẳng)
+ * Vẽ danh sách lịch sử các phiên chat lên Sidebar trái
  */
 function renderSidebar() {
     historyList.innerHTML = '';
@@ -107,7 +107,7 @@ function loadSession(id) {
  * Xóa hẳn một phiên chat khỏi bộ nhớ
  */
 function deleteSession(event, id) {
-    event.stopPropagation(); // Ngăn chặn sự kiện kích hoạt mở lại tab chat khi bấm nút xóa
+    event.stopPropagation();
     
     chatSessions = chatSessions.filter(s => s.id !== id);
     localStorage.setItem(`chat_sessions_${user}`, JSON.stringify(chatSessions));
@@ -136,7 +136,7 @@ function appendMessage(role, text) {
         `;
     }
     chatContent.appendChild(msgWrapper);
-    chatContent.scrollTop = chatContent.scrollHeight; // Tự động cuộn xuống dưới cùng khi có chữ mới
+    chatContent.scrollTop = chatContent.scrollHeight;
 }
 
 // ==========================================
@@ -152,80 +152,79 @@ async function getVehiclesContext() {
         const data = await res.json();
 
         if (!data || Object.keys(data).length === 0) {
-            return "Người dùng hiện chưa đăng ký phương tiện nào.";
+            return "Người dùng hiện chưa đăng ký phương tiện nào trong tài khoản.";
         }
 
-        let context = "Dữ liệu các phương tiện hiện có của người dùng:\n\n";
+        let context = "Dữ liệu danh sách xe của người dùng hiện có trên hệ thống:\n\n";
         Object.values(data).forEach((car, index) => {
-            context += `- Xe ${index + 1}: ${car.brand || ''} ${car.name || ''} [Biển số: ${car.plate || 'Chưa rõ'}]\n`;
-            if (car.km) context += `  + ODO: ${car.km} km\n`;
+            context += `- Xe ${index + 1}: ${car.brand || ''} ${car.name || ''} [Loại: ${car.type || 'Chưa rõ'}, Biển số: ${car.plate || 'Chưa rõ'}]\n`;
+            if (car.fuel) context += `  + Loại nhiên liệu: ${car.fuel}\n`;
+            if (car.driver) context += `  + Tài xế: ${car.driver} (${car.phone || 'Không có SĐT'})\n`;
             if (car.registry) context += `  + Hạn đăng kiểm: ${car.registry}\n`;
-            if (car.insurance) context += `  + Hạn bảo hiểm: ${car.insurance}\n`;
-            if (car.roadfee) context += `  + Phí đường bộ: ${car.roadfee}\n`;
+            if (car.licenseExpiry) context += `  + Hạn bằng lái: ${car.licenseExpiry}\n`;
+            if (car.insuranceVatchat) context += `  + BH vật chất: ${car.insuranceVatchat}\n`;
+            if (car.insuranceBatbuoc) context += `  + BH bắt buộc (TNDS): ${car.insuranceBatbuoc}\n`;
+            if (car.dangky) context += `  + Hạn đăng ký xe: ${car.dangky}\n`;
+            if (car.giayNganhang) context += `  + Hạn giấy đi đường ngân hàng: ${car.giayNganhang}\n`;
             if (car.oil) context += `  + Hạn thay dầu: ${car.oil}\n`;
-            if (car.filter) context += `  + Lọc gió/nhớt: ${car.filter}\n`;
-            if (car.tire) context += `  + Hạn đảo lốp: ${car.tire}\n`;
+            if (car.filter) context += `  + Lọc nhớt/gió: ${car.filter}\n`;
+            if (car.tire) context += `  + Bảo dưỡng củ đề/máy phát: ${car.tire}\n`;
             if (car.brake) context += `  + Bảo dưỡng phanh: ${car.brake}\n`;
             if (car.aircon) context += `  + Vệ sinh máy lạnh: ${car.aircon}\n`;
-            if (car.licenseExpiry) context += `  + Hạn bằng lái: ${car.licenseExpiry}\n`;
-            if (car.note) context += `  + Ghi chú riêng: ${car.note}\n`;
+            if (car.bommo) context += `  + Bơm mỡ: ${car.bommo}\n`;
+            if (car.custom1_label && car.custom1_date) context += `  + ${car.custom1_label}: ${car.custom1_date}\n`;
+            if (car.custom2_label && car.custom2_date) context += `  + ${car.custom2_label}: ${car.custom2_date}\n`;
+            if (car.custom3_label && car.custom3_date) context += `  + ${car.custom3_label}: ${car.custom3_date}\n`;
+            if (car.note) context += `  + Ghi chú: ${car.note}\n`;
             context += "\n";
         });
         return context;
     } catch (err) {
         console.warn("Không lấy được dữ liệu xe từ Firebase:", err);
-        return "Không có dữ liệu xe (Lỗi kết nối hệ thống dữ liệu).";
+        return "Không có dữ liệu xe (Chưa kết nối được hệ thống).";
     }
 }
 
-/**
- * Gọi API Groq xử lý hội thoại dựa trên mô hình llama-3.1-8b-instant có trí nhớ dài hạn
- */
 async function callGroq(userMsg) {
     const vehicleData = await getVehiclesContext();
     const cleanKey = GROQ_API_KEY.trim();
+    const currentDateStr = new Date().toLocaleDateString('vi-VN');
 
-    const systemPrompt = `Bạn là một trợ lý ảo thông minh, nhiệt tình và cực kỳ am hiểu về xe của ứng dụng YourCarManagement.
+    // System Prompt chung chung, linh hoạt giải đáp nhiều chủ đề
+    const systemPrompt = `Bạn là trợ lý AI thông minh, thân thiện và am hiểu chuyên sâu của ứng dụng quản lý xe "YourCarManagement".
 
-Nhiệm vụ của bạn là hỗ trợ người dùng quản lý xe. Khi người dùng hỏi về tình trạng xe, tuyệt đối KHÔNG liệt kê một danh sách dài thô kệch, khô khan. Hãy tuân thủ phong cách trả lời sau:
-1. Đón chào bằng giọng điệu hào hứng, thân thiện kèm emoji phù hợp (Ví dụ: 🚗, ✨, 🛠️).
-2. Tóm tắt nhanh tình trạng xe. Hãy chủ động phân loại các mốc thời gian so với hôm nay (07/07/2026):
-   - ⚠️ Nhóm Khẩn cấp (Đã quá hạn hoặc sát ngày): Đưa lên đầu, nhắc nhở chủ xe đi xử lý ngay.
-   - 📅 Nhóm Sắp đến hạn (Trong tháng này): Nhắc nhở để họ sắp xếp lịch trình.
-   - ✅ Nhóm An tâm (Còn lâu mới đến hạn): Điểm qua ngắn gọn để chủ xe yên tâm.
-3. Luôn đưa ra lời khuyên thực tế, hữu ích ở cuối câu trả lời.
+Nhiệm vụ của bạn:
+1. Giải đáp thắc mắc của người dùng về tình trạng xe cá nhân, kỹ thuật ô tô/xe máy, quy trình bảo dưỡng, thủ tục pháp lý (đăng kiểm, bảo hiểm, bằng lái...) hoặc hướng dẫn sử dụng ứng dụng.
+2. Trả lời linh hoạt, ngắn gọn, tự nhiên, văn phong lịch sự và sử dụng icon/emoji nhẹ nhàng khi phù hợp.
+3. Nếu người dùng hỏi về danh sách xe hoặc tình trạng bảo dưỡng/hạn giấy tờ của họ, hãy dựa vào dữ liệu thực tế bên dưới để phân tích, tư vấn (Mốc thời gian hôm nay là ${currentDateStr}).
+4. Nếu thắc mắc mang tính chung chung (kỹ thuật, kiến thức xe, hỏi đáp thông thường), hãy trả lời trực tiếp, chính xác mà không nhất thiết phải tham chiếu đến dữ liệu xe cá nhân trừ khi thực sự cần thiết.
 
-Dưới đây là thông tin thực tế về xe của người dùng để bạn phân tích (Chỉ sử dụng khéo léo khi cần):
+[Dữ liệu xe của người dùng trên hệ thống]:
 ${vehicleData}`;
 
     // 1. Khởi tạo mảng hội thoại bắt đầu bằng System Prompt
     let apiMessages = [{ "role": "system", "content": systemPrompt }];
 
-    // 2. Tìm phiên chat hiện tại trong bộ nhớ lưu trữ
+    // 2. Nạp toàn bộ lịch sử hội thoại của session hiện tại
     const currentSession = chatSessions.find(s => s.id === currentSessionId);
 
     if (currentSession && currentSession.messages && currentSession.messages.length > 0) {
-        // Duyệt qua toàn bộ lịch sử tin nhắn đã lưu của session này để nạp vào API
         currentSession.messages.forEach(m => {
             apiMessages.push({
-                // Trong DB của bạn lưu 'bot', nhưng API Groq yêu cầu vai trò là 'assistant'
                 "role": m.role === 'user' ? 'user' : 'assistant', 
                 "content": m.text
             });
         });
-        
-        // Thêm chính câu hỏi hiện tại mà người dùng vừa gõ vào cuối mảng lịch sử
         apiMessages.push({ "role": "user", "content": userMsg });
     } else {
-        // Nếu là phiên chat mới tinh chưa có lịch sử, chỉ gửi câu hỏi hiện tại
         apiMessages.push({ "role": "user", "content": userMsg });
     }
 
-    // 3. Đóng gói Request Body gửi lên Groq
+    // 3. Đóng gói Request Body gửi lên Groq API
     const requestBody = {
-        "model": "llama-3.1-8b-instant",
-        "messages": apiMessages, // Mảng này bây giờ đã chứa trọn vẹn lịch sử hội thoại
-        "temperature": 0.75,
+        "model": "openai/gpt-oss-20b",
+        "messages": apiMessages,
+        "temperature": 0.7,
         "max_tokens": 1024
     };
 
@@ -252,6 +251,7 @@ ${vehicleData}`;
         return "Không thể kết nối mạng internet hoặc máy chủ AI đang bận!";
     }
 }
+
 /**
  * Điều phối chính việc gửi nhận tin nhắn và đóng gói lưu trữ mảng Session
  */
@@ -259,7 +259,6 @@ async function sendMessage() {
     const text = chatInput.value.trim();
     if (!text) return;
 
-    // Tiến hành tạo ID phiên chat mới nếu đang gõ ở trạng thái tab trống
     if (!currentSessionId) {
         currentSessionId = 'session-' + Date.now();
         const shortTitle = text.length > 20 ? text.substring(0, 20) + '...' : text;
@@ -270,19 +269,17 @@ async function sendMessage() {
             messages: []
         });
         localStorage.setItem(`current_session_id_${user}`, currentSessionId);
-        chatContent.innerHTML = ''; // Dọn dẹp tin nhắn chào mặc định
+        chatContent.innerHTML = '';
     }
 
     const session = chatSessions.find(s => s.id === currentSessionId);
 
-    // Lưu và hiển thị ngay tin nhắn của người dùng
     appendMessage('user', text);
     session.messages.push({ role: 'user', text: text });
     localStorage.setItem(`chat_sessions_${user}`, JSON.stringify(chatSessions));
     renderSidebar();
     chatInput.value = '';
 
-    // Tạo hiệu ứng phân tích chờ xử lý dữ liệu
     const loadingId = 'loading-' + Date.now();
     const loadingMsg = document.createElement('div');
     loadingMsg.id = loadingId;
@@ -291,14 +288,11 @@ async function sendMessage() {
     chatContent.appendChild(loadingMsg);
     chatContent.scrollTop = chatContent.scrollHeight;
 
-    // Thực thi lấy phản hồi từ lõi AI
     const aiReply = await callGroq(text);
 
-    // Gỡ bỏ hiệu ứng loading
     const loadingEl = document.getElementById(loadingId);
     if (loadingEl) loadingEl.remove();
 
-    // Lưu và kết xuất kết quả phản hồi cuối cùng ra giao diện rộng
     appendMessage('bot', aiReply);
     session.messages.push({ role: 'bot', text: aiReply });
     localStorage.setItem(`chat_sessions_${user}`, JSON.stringify(chatSessions));

@@ -5,7 +5,6 @@
     <title>YourCarManagement - List</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- Thêm style cho Modal -->
     <style>
         .navbar { padding: 0.8rem 0 !important; }
         .custom-nav .nav-link:hover { color: #ffc107 !important; transform: translateY(-1px); }
@@ -19,6 +18,7 @@
         .btn-cancel { background-color: #f8f9fa; border: 1px solid #ddd; padding: 10px 30px; border-radius: 6px; text-decoration: none; color: #333; }
         .car-actions { display: flex; gap: 8px; margin-top: 10px; }
         .list-group-item { border-left: 4px solid #0d6efd; }
+        .car-card-img { width: 100%; height: 160px; object-fit: cover; border-top-left-radius: 6px; border-top-right-radius: 6px; }
     </style>
 </head>
 <body onload="loadCars()">
@@ -86,13 +86,33 @@
     <!-- Modal Thêm xe -->
     <div class="modal fade" id="addModal" tabindex="-1">
         <div class="modal-dialog"><div class="modal-content"><div class="modal-body">
-            <h4><i class="fas fa-plus"></i> Thêm xe mới</h4>
+            <h5 class="mb-3"><i class="fas fa-plus me-2 text-primary"></i>Thêm xe mới</h5>
+            
+            <label class="form-label small fw-semibold">Loại xe</label>
+            <select id="t" class="form-select mb-2" onchange="handleAddTypeChange(this)">
+                <option value="Ô tô">Ô tô</option>
+                <option value="Xe máy">Xe máy</option>
+                <option value="Xe máy điện">Xe máy điện</option>
+                <option value="Xe khách">Xe khách</option>
+                <option value="Xe tải">Xe tải</option>
+                <option value="Khác">Khác (Tự nhập)</option>
+            </select>
+            <!-- Ô nhập phụ xuất hiện khi chọn Khác -->
+            <input type="text" id="t-custom" class="form-control mb-2 d-none" placeholder="Nhập loại xe tùy chỉnh (VD: xe ben)...">
+
+            <label class="form-label small fw-semibold">Hãng xe</label>
             <input type="text" id="b" class="form-control mb-2" placeholder="Hãng xe">
+
+            <label class="form-label small fw-semibold">Tên xe</label>
             <input type="text" id="n" class="form-control mb-2" placeholder="Tên xe">
+
+            <label class="form-label small fw-semibold">Biển số</label>
             <input type="text" id="p" class="form-control mb-2" placeholder="Biển số">
-            <button onclick="addCar()" class="btn btn-primary w-100">Đồng bộ lên Cloud</button>
+
+            <button onclick="addCar()" class="btn btn-primary w-100 mt-2">Đồng bộ lên Cloud</button>
         </div></div></div>
     </div>
+
     <footer class="bg-white border-top py-3 text-center mt-auto">
         <div class="container">
             <p class="mb-0">© 2026 <strong>YourCarManagement</strong>. Toàn bộ dữ liệu được đồng bộ Cloud.</p>
@@ -105,22 +125,46 @@
         const user = checkAuth();
         let historyModalInstance = null;
 
+        // Xử lý bật/tắt ô nhập tùy chỉnh khi thêm xe ở Modal
+        function handleAddTypeChange(selectEl) {
+            const customInput = document.getElementById('t-custom');
+            if (selectEl.value === 'Khác') {
+                customInput.classList.remove('d-none');
+                customInput.focus();
+            } else {
+                customInput.classList.add('d-none');
+                customInput.value = '';
+            }
+        }
+
         async function loadCars() {
             const res = await fetch(getUrl(`users/${user}/cars`));
             const data = await res.json();
             const list = document.getElementById('car-list');
             if(!data) return list.innerHTML = "<p class='text-center text-muted'>Chưa có xe nào...</p>";
             
+            const defaultImg = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'><rect width='100%' height='100%' fill='%23e9ecef'/><text x='50%' y='50%' font-family='sans-serif' font-size='16' fill='%236c757d' dominant-baseline='middle' text-anchor='middle'>📸 Chưa có hình ảnh</text></svg>";
+
             list.innerHTML = '';
             Object.entries(data).forEach(([id, c]) => {
+                const imgUrl = c.img || defaultImg;
+                // Nếu c.type có dữ liệu, hiển thị trực tiếp lên badge (ví dụ: "xe ben")
+                const carType = c.type ? `<span class="badge bg-info text-dark ms-2">${c.type}</span>` : '';
+
                 list.innerHTML += `
-                    <div class="col-md-4 mb-3">
-                        <div class="card shadow-sm border-0">
-                            <div class="card-body">
-                                <h6 class="fw-bold text-primary">${c.brand || ''} ${c.name || ''}</h6>
-                                <p class="small mb-1">Biển: ${c.plate || 'N/A'} | KM: ${c.km || 0}</p>
+                    <div class="col-md-4 mb-4">
+                        <div class="card shadow-sm border-0 h-100">
+                            <img src="${imgUrl}" class="car-card-img" alt="${c.name || 'Xe'}">
+                            <div class="card-body d-flex flex-column justify-content-between">
+                                <div>
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <h6 class="fw-bold text-primary mb-0">${c.brand || ''} ${c.name || ''}</h6>
+                                        ${carType}
+                                    </div>
+                                    <p class="form-label small fw-bold text-danger mb-2">Biển: ${c.plate || 'N/A'}</p>
+                                </div>
                                 <div class="car-actions">
-                                    <button class="btn btn-sm btn-outline-info py-0" onclick="showHistory('${id}')"><i class="fas fa-history"></i></button>
+                                    <button class="btn btn-sm btn-outline-info py-0" onclick="showHistory('${id}')" title="Nhật ký thay đổi"><i class="fas fa-history"></i></button>
                                     <button class="btn btn-sm btn-outline-success py-0" onclick="exportFullCarData('${id}')" title="Xuất toàn bộ thông tin"><i class="fas fa-file-export"></i></button>
                                     <a href="editor.html?id=${id}" class="btn btn-sm btn-outline-warning py-0">Sửa</a>
                                     <button class="btn btn-sm btn-outline-danger py-0" onclick="del('${id}')">Xóa</button>
@@ -219,33 +263,28 @@
                 
                 if (!historyData) return alert("Không có dữ liệu để xuất!");
 
-                // Danh sách ánh xạ các ID trong form sang tên hiển thị trong Excel
                 const fieldMap = {
-                    // Thông tin cơ bản
+                    'type': 'Loại xe',
                     'brand': 'Hãng xe',
                     'name': 'Tên xe',
                     'plate': 'Biển số',
                     'km': 'Số KM',
                     'fuel': 'Nhiên liệu',
-                    // Tài xế
                     'driver': 'Tài xế',
                     'license_rank': 'Hạng bằng',
                     'phone': 'SĐT Tài xế',
-                    // Giấy tờ
                     'registry': 'Hạn Đăng kiểm',
                     'license_expiry': 'Hạn Bằng lái',
                     'insurance_vatchat': 'BH Vật chất',
                     'insurance_batbuoc': 'BH TNDS',
                     'dangky': 'Hạn Đăng ký',
                     'giay_nganhang': 'Hạn Giấy ngân hàng',
-                    // Bảo trì
                     'oil': 'Hạn Thay dầu',
                     'filter': 'Hạn Lọc nhớt',
                     'tire': 'Bảo dưỡng củ đề',
                     'brake': 'Bảo dưỡng phanh',
                     'aircon': 'Vệ sinh máy lạnh',
                     'bommo': 'Bơm mỡ',
-                    // Tùy chỉnh
                     'custom1_label': 'Hạng mục 1',
                     'custom1_date': 'Ngày hạng mục 1',
                     'custom2_label': 'Hạng mục 2',
@@ -259,11 +298,8 @@
                     let row = { "Thời gian cập nhật": new Date(parseInt(timestamp)).toLocaleString('vi-VN') };
                     
                     for (let key in changes) {
-                        // Chuyển đổi ID (ví dụ: e-oil) thành key để khớp với fieldMap nếu cần
-                        // Nếu dữ liệu lưu dưới dạng 'e-oil', hãy đảm bảo key ở đây khớp
                         const cleanKey = key.replace('e-', ''); 
                         const displayName = fieldMap[cleanKey] || key.toUpperCase();
-                        
                         row[displayName] = `${changes[key].old || 'Trống'} -> ${changes[key].new}`;
                     }
                     return row;
@@ -277,69 +313,69 @@
                 console.error(err);
                 alert("Lỗi khi xuất file!");
             }
-    }
-    async function exportFullCarData(carId) {
-        try {
-            const res = await fetch(getUrl(`users/${user}/cars/${carId}`));
-            const carData = await res.json();
-            
-            if (!carData) return alert("Không tìm thấy dữ liệu xe!");
-
-            // Định nghĩa tiêu đề tương ứng với key dữ liệu
-            const fieldMap = {
-                'brand': 'Hãng xe',
-                'name': 'Tên xe',
-                'plate': 'Biển số',
-                'km': 'Số KM',
-                'driver': 'Tài xế',
-                'license_rank': 'Hạng bằng',
-                'phone': 'SĐT Tài xế',
-                'registry': 'Hạn Đăng kiểm',
-                'license_expiry': 'Hạn Bằng lái',
-                'insurance_vatchat': 'BH Vật chất',
-                'insurance_batbuoc': 'BH TNDS',
-                'dangky': 'Hạn Đăng ký',
-                'giay_nganhang': 'Hạn Giấy ngân hàng',
-                'oil': 'Hạn Thay dầu',
-                'filter': 'Hạn Lọc nhớt',
-                'tire': 'Bảo dưỡng củ đề',
-                'brake': 'Bảo dưỡng phanh',
-                'aircon': 'Vệ sinh máy lạnh',
-                'bommo': 'Bơm mỡ',
-                'custom1_label': 'Nhãn 1',
-                'custom1_date': 'Ngày 1',
-                'custom2_label': 'Nhãn 2',
-                'custom2_date': 'Ngày 2',
-                'custom3_label': 'Nhãn 3',
-                'custom3_date': 'Ngày 3'
-            };
-
-            // Chuyển dữ liệu sang mảng các object có dạng {Field: "Tên", Value: "Giá trị"}
-            let rows = [];
-            for (let key in fieldMap) {
-                if (carData[key] !== undefined) {
-                    rows.push({
-                        "Thông tin": fieldMap[key],
-                        "Giá trị": carData[key]
-                    });
-                }
-            }
-
-            // Tạo Sheet từ mảng rows (dữ liệu sẽ trải dài theo chiều dọc)
-            const ws = XLSX.utils.json_to_sheet(rows);
-            
-            // Điều chỉnh độ rộng cột để nhìn đẹp hơn
-            ws['!cols'] = [{ wch: 20 }, { wch: 30 }];
-
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "ThongTinXe");
-            
-            XLSX.writeFile(wb, `ThongTin_${carData.name || 'Xe'}.xlsx`);
-        } catch (err) {
-            console.error(err);
-            alert("Lỗi khi xuất dữ liệu!");
         }
-    }
+
+        async function exportFullCarData(carId) {
+            try {
+                const res = await fetch(getUrl(`users/${user}/cars/${carId}`));
+                const carData = await res.json();
+                
+                if (!carData) return alert("Không tìm thấy dữ liệu xe!");
+
+                const fieldMap = {
+                    'type': 'Loại xe',
+                    'brand': 'Hãng xe',
+                    'name': 'Tên xe',
+                    'plate': 'Biển số',
+                    'km': 'Số KM',
+                    'fuel': 'Nhiên liệu',
+                    'driver': 'Tài xế',
+                    'licenseRank': 'Hạng bằng',
+                    'phone': 'SĐT Tài xế',
+                    'registry': 'Hạn Đăng kiểm',
+                    'licenseExpiry': 'Hạn Bằng lái',
+                    'insuranceVatchat': 'BH Vật chất',
+                    'insuranceBatbuoc': 'BH TNDS',
+                    'dangky': 'Hạn Đăng ký',
+                    'giayNganhang': 'Hạn Giấy ngân hàng',
+                    'oil': 'Hạn Thay dầu',
+                    'filter': 'Hạn Lọc nhớt',
+                    'tire': 'Bảo dưỡng củ đề',
+                    'brake': 'Bảo dưỡng phanh',
+                    'aircon': 'Vệ sinh máy lạnh',
+                    'bommo': 'Bơm mỡ',
+                    'custom1_label': 'Nhãn 1',
+                    'custom1_date': 'Ngày 1',
+                    'custom2_label': 'Nhãn 2',
+                    'custom2_date': 'Ngày 2',
+                    'custom3_label': 'Nhãn 3',
+                    'custom3_date': 'Ngày 3',
+                    'note': 'Ghi chú'
+                };
+
+                let rows = [];
+                for (let key in fieldMap) {
+                    if (carData[key] !== undefined) {
+                        rows.push({
+                            "Thông tin": fieldMap[key],
+                            "Giá trị": carData[key]
+                        });
+                    }
+                }
+
+                const ws = XLSX.utils.json_to_sheet(rows);
+                ws['!cols'] = [{ wch: 25 }, { wch: 35 }];
+
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, "ThongTinXe");
+                
+                XLSX.writeFile(wb, `ThongTin_${carData.name || 'Xe'}.xlsx`);
+            } catch (err) {
+                console.error(err);
+                alert("Lỗi khi xuất dữ liệu!");
+            }
+        }
+
         // Cơ chế dọn dẹp để chống "đóng băng" giao diện
         document.getElementById('historyModal').addEventListener('hidden.bs.modal', function () {
             document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
@@ -349,11 +385,17 @@
         });
 
         async function addCar() {
+            // Lấy loại xe: nếu chọn "Khác" thì lấy giá trị ở ô input tự nhập (ví dụ: "xe ben"), ngược lại lấy giá trị select
+            const selectVal = document.getElementById('t').value;
+            const finalType = selectVal === 'Khác' 
+                ? (document.getElementById('t-custom').value.trim() || 'Khác') 
+                : selectVal;
+
             const car = { 
+                type: finalType,
                 brand: document.getElementById('b').value, 
                 name: document.getElementById('n').value, 
                 plate: document.getElementById('p').value,
-                km: 0 
             };
             await fetch(getUrl(`users/${user}/cars`), { method: 'POST', body: JSON.stringify(car) });
             location.reload();
