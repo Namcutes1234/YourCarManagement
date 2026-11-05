@@ -1,0 +1,17 @@
+# Các file cấu hình chứa API Key nhạy cảm (không đẩy lên GitHub)
+config.js
+.env
+.env.local
+.env.development.local
+.env.production.local
+
+# Thư mục phụ thuộc / môi trường ảo
+node_modules/
+.DS_Store
+Thumbs.db
+
+# File log và build tạm thời
+*.log
+dist/
+build/
+.vercel
