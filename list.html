@@ -348,7 +348,7 @@
                 const res = await fetch(getUrl(`users/${user}/cars/${carId}/history`));
                 const historyData = await res.json();
                 
-                if (!historyData) return alert("Không có dữ liệu để xuất!");
+                if (!historyData) return alert("Không có dữ liệu lịch sử để xuất!");
 
                 const fieldMap = {
                     'type': 'Loại xe',
@@ -385,19 +385,41 @@
                     
                     for (let key in changes) {
                         const cleanKey = key.replace('e-', ''); 
+                        
+                        // Loại bỏ hoàn toàn trường liên quan đến km / ODO
+                        if (cleanKey === 'km') continue;
+
                         const displayName = fieldMap[cleanKey] || key.toUpperCase();
-                        row[displayName] = `${changes[key].old || 'Trống'} -> ${changes[key].new}`;
+                        let oldVal = changes[key].old || 'Trống';
+                        let newVal = changes[key].new || 'Trống';
+
+                        // Rút gọn nếu chuỗi ảnh quá dài để file Excel không bị dị dạng ô
+                        if (cleanKey === 'img') {
+                            oldVal = oldVal.length > 30 ? '[Ảnh cũ]' : oldVal;
+                            newVal = newVal.length > 30 ? '[Ảnh mới]' : newVal;
+                        }
+
+                        row[displayName] = `${oldVal} -> ${newVal}`;
                     }
                     return row;
                 });
 
                 const ws = XLSX.utils.json_to_sheet(data);
+                
+                // Tự động căn chỉnh độ rộng các cột trong file lịch sử cho dễ nhìn
+                ws['!cols'] = [
+                    { wch: 22 }, // Cột thời gian
+                    { wch: 30 }, // Cột nội dung thay đổi 1
+                    { wch: 30 }, // Cột nội dung thay đổi 2
+                    { wch: 30 }  // Các cột tiếp theo
+                ];
+
                 const wb = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(wb, ws, "LichSu");
+                XLSX.utils.book_append_sheet(wb, ws, "NhatKyThayDoi");
                 XLSX.writeFile(wb, `LichSu_${carId}.xlsx`);
             } catch (err) {
                 console.error(err);
-                alert("Lỗi khi xuất file!");
+                alert("Lỗi khi xuất file lịch sử!");
             }
         }
 
@@ -429,32 +451,40 @@
                     'brake': 'Bảo dưỡng phanh',
                     'aircon': 'Vệ sinh máy lạnh',
                     'bommo': 'Bơm mỡ',
-                    'custom1_label': 'Nhãn 1',
-                    'custom1_date': 'Ngày 1',
-                    'custom2_label': 'Nhãn 2',
-                    'custom2_date': 'Ngày 2',
-                    'custom3_label': 'Nhãn 3',
-                    'custom3_date': 'Ngày 3',
+                    'custom1_label': 'Hạng mục tùy chỉnh 1',
+                    'custom1_date': 'Ngày HCM 1',
+                    'custom2_label': 'Hạng mục tùy chỉnh 2',
+                    'custom2_date': 'Ngày HCM 2',
+                    'custom3_label': 'Hạng mục tùy chỉnh 3',
+                    'custom3_date': 'Ngày HCM 3',
                     'note': 'Ghi chú'
                 };
 
                 let rows = [];
                 for (let key in fieldMap) {
-                    if (carData[key] !== undefined) {
+                    // Bỏ qua nếu dữ liệu là km hoặc không có giá trị
+                    if (key === 'km' || key === 'e-km') continue;
+                    
+                    if (carData[key] !== undefined && carData[key] !== "") {
                         rows.push({
-                            "Thông tin": fieldMap[key],
-                            "Giá trị": carData[key]
+                            "Hạng mục quản lý": fieldMap[key],
+                            "Chi tiết thông tin": carData[key]
                         });
                     }
                 }
 
                 const ws = XLSX.utils.json_to_sheet(rows);
-                ws['!cols'] = [{ wch: 25 }, { wch: 35 }];
+                
+                // Tùy chỉnh độ rộng cột giúp bảng Excel thoáng và đẹp hơn
+                ws['!cols'] = [
+                    { wch: 30 }, // Cột hạng mục rộng rãi
+                    { wch: 40 }  // Cột giá trị rộng rãi
+                ];
 
                 const wb = XLSX.utils.book_new();
                 XLSX.utils.book_append_sheet(wb, ws, "ThongTinXe");
                 
-                XLSX.writeFile(wb, `ThongTin_${carData.name || 'Xe'}.xlsx`);
+                XLSX.writeFile(wb, `ThongTin_${carData.name || 'Xe'}_${carData.plate || ''}.xlsx`);
             } catch (err) {
                 console.error(err);
                 alert("Lỗi khi xuất dữ liệu!");
