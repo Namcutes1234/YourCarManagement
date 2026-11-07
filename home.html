@@ -17,7 +17,6 @@
         .custom-nav i {
             font-size: 14px;
         }
-        /* Cấu trúc Flexbox giúp Footer luôn bám chắc ở đáy màn hình */
         body { 
             background-color: #f4f7f6; 
             display: flex; 
@@ -30,12 +29,12 @@
             padding: 40px 0; 
         }
         .stat-card { border: none; border-radius: 15px; transition: 0.3s; }
-        .stat-card:hover { transform: translateY(-5px); }
-        .icon-box { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+        .stat-card:hover { transform: translateY(-3px); }
+        .icon-box { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
         .navbar-brand { font-size: 1.2rem !important; }
         footer { font-size: 11px; flex-shrink: 0; color: #6c757d; }
         .alert-container { border-radius: 15px; overflow: hidden; }
-        .type-badge { font-size: 13px; padding: 6px 12px; border-radius: 20px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; }
+        .type-badge { font-size: 12px; padding: 5px 10px; border-radius: 20px; font-weight: 500; display: inline-flex; align-items: center; gap: 5px; }
     </style>
 </head>
 <body onload="initDashboard()">
@@ -88,40 +87,47 @@
             </div>
             
             <div class="row mb-4">
-                <!-- Card Tổng số xe -->
+                <!-- Card Tổng số xe (Tích hợp phân loại bên dưới) -->
                 <div class="col-md-6 mb-3">
                     <div class="card stat-card shadow-sm h-100">
-                        <div class="card-body d-flex align-items-center">
-                            <div class="icon-box bg-primary text-white me-3"><i class="fas fa-car"></i></div>
+                        <div class="card-body d-flex flex-column justify-content-between">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="icon-box bg-primary text-white me-3"><i class="fas fa-car"></i></div>
+                                <div>
+                                    <h6 class="text-muted small mb-0">Tổng số xe</h6>
+                                    <h4 class="fw-bold mb-0" id="total-cars">0</h4>
+                                </div>
+                            </div>
+                            <hr class="text-muted my-2">
                             <div>
-                                <h6 class="text-muted small mb-0">Tổng số xe</h6>
-                                <h4 class="fw-bold mb-0" id="total-cars">0</h4>
+                                <span class="small text-muted d-mb-1 fw-semibold mb-2 d-block">Phân loại chi tiết:</span>
+                                <div id="car-types-breakdown" class="d-flex flex-wrap gap-1">
+                                    <span class="text-muted small">Đang tải...</span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Card Cần xử lý -->
+                <!-- Card Cần xử lý (Tích hợp phân loại xe cần xử lý bên dưới) -->
                 <div class="col-md-6 mb-3">
                     <div class="card stat-card shadow-sm h-100">
-                        <div class="card-body d-flex align-items-center">
-                            <div class="icon-box bg-warning text-white me-3"><i class="fas fa-shield-alt"></i></div>
+                        <div class="card-body d-flex flex-column justify-content-between">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="icon-box bg-warning text-white me-3"><i class="fas fa-shield-alt"></i></div>
+                                <div>
+                                    <h6 class="text-muted small mb-0">Tổng số xe cần xử lý</h6>
+                                    <h4 class="fw-bold mb-0" id="need-service">0</h4>
+                                </div>
+                            </div>
+                            <hr class="text-muted my-2">
                             <div>
-                                <h6 class="text-muted small mb-0">Cần xử lý</h6>
-                                <h4 class="fw-bold mb-0" id="need-service">0</h4>
+                                <span class="small text-muted d-mb-1 fw-semibold mb-2 d-block">Phân loại xe cần xử lý:</span>
+                                <div id="need-service-breakdown" class="d-flex flex-wrap gap-1">
+                                    <span class="text-muted small">Đang tải...</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Card Phân loại chi tiết các loại xe -->
-            <div class="card stat-card shadow-sm mb-4">
-                <div class="card-body">
-                    <h6 class="fw-bold text-secondary mb-3"><i class="fas fa-chart-pie me-2"></i>Thống kê theo phân loại xe</h6>
-                    <div id="car-types-breakdown" class="d-flex flex-wrap gap-2">
-                        <!-- Dữ liệu phân loại sẽ được render tự động vào đây -->
-                        <span class="text-muted small">Đang tải dữ liệu phân loại...</span>
                     </div>
                 </div>
             </div>
@@ -140,7 +146,6 @@
     <script>
         const user = checkAuth();
         
-        // Hàm tính số ngày còn lại kể từ ngày hôm nay (YYYY-MM-DD)
         function calculateDaysLeft(targetDateStr) {
             if (!targetDateStr) return null;
             const today = new Date();
@@ -153,7 +158,6 @@
             return Math.ceil(timeDiff / (1000 * 3600 * 24));
         }
 
-        // Hàm ánh xạ loại xe sang Icon FontAwesome tương ứng
         function getCarIcon(type) {
             if (!type) return '<i class="fas fa-car"></i>';
             const t = type.toLowerCase();
@@ -176,7 +180,7 @@
                 const carsArray = Object.values(data);
                 document.getElementById('total-cars').innerText = carsArray.length;
 
-                // THỐNG KÊ PHÂN LOẠI XE (Ô tô, Xe máy, Xe ben...)
+                // 1. THỐNG KÊ TỔNG PHÂN LOẠI XE
                 const typeCounts = {};
                 carsArray.forEach(car => {
                     const t = car.type || 'Chưa phân loại';
@@ -202,7 +206,7 @@
                 }
 
                 if (Object.keys(typeCounts).length === 0) {
-                    breakdownContainer.innerHTML = '<span class="text-muted small">Chưa có phương tiện nào trong hệ thống.</span>';
+                    breakdownContainer.innerHTML = '<span class="text-muted small">Chưa có phương tiện.</span>';
                 }
 
                 // CẤU HÌNH CÁC MỤC QUÉT ALERT
@@ -223,18 +227,20 @@
                     { key: 'custom2', label: 'Tùy chỉnh 2', isCustom: true, threshold: 15 },
                     { key: 'custom3', label: 'Tùy chỉnh 3', isCustom: true, threshold: 15 }
                 ];
+
                 const alertContainer = document.getElementById('alert-box-container');
                 alertContainer.innerHTML = ''; 
 
                 let needServiceCars = new Set();
+                let needServiceTypeCounts = {}; // Thống kê phân loại xe cần xử lý
                 let allAlerts = []; 
 
-                // Duyệt qua từng xe trong hệ thống
                 carsArray.forEach(car => {
                     const carName = `${car.brand || ''} ${car.name || ''} (${car.plate || 'Chưa có biển'})`;
                     const carId = car.plate || car.name || Math.random().toString();
+                    const carType = car.type || 'Chưa phân loại';
+                    let hasAlertForThisCar = false;
 
-                    // Duyệt qua từng mục ngày hạn để kiểm tra
                     alertConfigs.forEach(config => {
                         let dateValue = "";
                         let labelText = config.label;
@@ -242,12 +248,8 @@
                         if (config.isCustom) {
                             const customLabel = car[`${config.key}_label`];
                             dateValue = car[`${config.key}_date`];
-                            
-                            if (customLabel && dateValue) {
-                                labelText = customLabel; 
-                            } else {
-                                return; 
-                            }
+                            if (customLabel && dateValue) labelText = customLabel; 
+                            else return; 
                         } else {
                             dateValue = car[config.key];
                         }
@@ -257,21 +259,21 @@
                             const maxThreshold = (config.key === 'licenseExpiry') ? 30 : 15;
 
                             if (daysLeft <= maxThreshold) {
+                                hasAlertForThisCar = true;
+                                needServiceCars.add(carId);
+
                                 let alertClass = "";
                                 let priority = 3; 
 
                                 if (daysLeft <= 1) {
                                     alertClass = "alert-danger"; 
                                     priority = 1;
-                                    needServiceCars.add(carId); 
                                 } else if (daysLeft <= 7) {
                                     alertClass = "alert-warning"; 
                                     priority = 2;
-                                    needServiceCars.add(carId);
                                 } else {
                                     alertClass = "alert-success"; 
                                     priority = 3;
-                                    needServiceCars.add(carId);
                                 }
 
                                 let alertText = "";
@@ -299,10 +301,35 @@
                             }
                         }
                     });
+
+                    // Nếu xe này có phát sinh cảnh báo, ghi nhận vào bộ đếm phân loại cần xử lý
+                    if (hasAlertForThisCar) {
+                        needServiceTypeCounts[carType] = (needServiceTypeCounts[carType] || 0) + 1;
+                    }
                 });
 
-                allAlerts.sort((a, b) => a.priority - b.priority);
+                // 2. RENDER PHÂN LOẠI XE CẦN XỬ LÝ BÊN DƯỚI CARD CẦN XỬ LÝ
+                const needServiceBreakdown = document.getElementById('need-service-breakdown');
+                needServiceBreakdown.innerHTML = '';
+                
+                let sColorIndex = 0;
+                for (const [typeName, count] of Object.entries(needServiceTypeCounts)) {
+                    const badgeClass = badgeColors[sColorIndex % badgeColors.length];
+                    const iconHtml = getCarIcon(typeName);
+                    
+                    needServiceBreakdown.innerHTML += `
+                        <span class="badge ${badgeClass} type-badge shadow-sm">
+                            ${iconHtml} ${typeName}: <strong class="ms-1">${count}</strong>
+                        </span>
+                    `;
+                    sColorIndex++;
+                }
 
+                if (Object.keys(needServiceTypeCounts).length === 0) {
+                    needServiceBreakdown.innerHTML = '<span class="text-muted small">Không có phương tiện nào cần xử lý.</span>';
+                }
+
+                allAlerts.sort((a, b) => a.priority - b.priority);
                 allAlerts.forEach(alert => {
                     alertContainer.innerHTML += alert.html;
                 });
